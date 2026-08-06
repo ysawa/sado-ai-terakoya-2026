@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="400 0 680 680" role="img" aria-labelledby="title desc">
+  <title id="title">佐渡エンジニアの会のトキ</title>
+  <desc id="desc">薄い水色背景に、黒いくちばし、オレンジ色の顔と羽、淡いピンク色の首とお腹を持つ折り紙風のトキ</desc>
+
+  <rect x="400" y="0" width="680" height="680" fill="#eaf6fa"/>
+
+  <defs>
+    <linearGradient id="faceMain" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9b55"/>
+      <stop offset="1" stop-color="#f1663b"/>
+    </linearGradient>
+    <linearGradient id="faceTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc080"/>
+      <stop offset="1" stop-color="#ff8a49"/>
+    </linearGradient>
+    <linearGradient id="beak" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b4247"/>
+      <stop offset="1" stop-color="#111619"/>
+    </linearGradient>
+    <linearGradient id="neck" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#ffe2dc"/>
+      <stop offset="1" stop-color="#efaaa8"/>
+    </linearGradient>
+    <linearGradient id="belly" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8c9c7"/>
+      <stop offset="1" stop-color="#e6979e"/>
+    </linearGradient>
+    <linearGradient id="wing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9860"/>
+      <stop offset="1" stop-color="#ef5c37"/>
+    </linearGradient>
+    <linearGradient id="tail" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffdfa"/>
+      <stop offset="1" stop-color="#d9dcdd"/>
+    </linearGradient>
+    <filter id="birdShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="15" stdDeviation="16" flood-color="#cf765f" flood-opacity="0.20"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#birdShadow)" stroke="#fffaf7" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M879 120 L1027 85 L904 160 Z" fill="url(#beak)"/>
+    <path d="M879 120 L1027 85 L906 137 Z" fill="#4b5358"/>
+    <path d="M906 137 L1027 85 L904 160 Z" fill="#171c1f"/>
+
+    <path d="M783 155 L834 122 L879 120 L904 160 L882 208 Z" fill="url(#faceMain)"/>
+    <path d="M783 155 L834 122 L879 120 L846 170 Z" fill="url(#faceTop)"/>
+    <path d="M846 170 L879 120 L904 160 L882 208 Z" fill="#ef6b3e"/>
+    <path d="M783 155 L846 170 L882 208 Z" fill="#f47c46"/>
+
+    <path d="M783 155 L882 208 L922 503 L752 343 Z" fill="url(#neck)"/>
+    <path d="M882 208 L904 160 L922 503 Z" fill="#df8591"/>
+    <path d="M783 155 L752 343 L922 503 Z" fill="#ffd7d2"/>
+
+    <path d="M444 313 L752 343 L677 501 Z" fill="url(#wing)"/>
+    <path d="M444 313 L585 425 L752 343 Z" fill="#ff8e58"/>
+    <path d="M585 425 L677 501 L752 343 Z" fill="#ed5935"/>
+    <path d="M444 313 L585 425 L621 457 Z" fill="#ffab72" opacity="0.72"/>
+
+    <path d="M752 343 L922 503 L677 501 Z" fill="url(#belly)"/>
+    <path d="M752 343 L812 502 L677 501 Z" fill="#f5b8b8"/>
+    <path d="M812 502 L922 503 L677 501 Z" fill="#e58e98"/>
+
+    <path d="M621 457 L677 501 L922 503 L499 575 Z" fill="url(#tail)"/>
+    <path d="M621 457 L677 501 L499 575 Z" fill="#f5f1ed"/>
+    <path d="M677 501 L922 503 L499 575 Z" fill="#d8dbdc"/>
+
+    <circle cx="860" cy="146" r="9" fill="#20272b" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="857" cy="143" r="2.4" fill="#ffffff" stroke="none"/>
+  </g>
+</svg>
