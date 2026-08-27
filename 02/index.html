@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="令和8年度 佐渡市IT教育事業 AI寺子屋 第2回テキスト。ファイルを素材としてAIに渡し、案内文とExcelを加工する実践演習。">
+  <title>第2回 ファイルとExcelをAIで加工する｜佐渡市IT教育事業 AI寺子屋</title>
+  <style>
+    :root {
+      --ink: #17242d;
+      --muted: #5d6c76;
+      --paper: #fff;
+      --canvas: #f3f7f5;
+      --line: #d8e3df;
+      --sado: #087f73;
+      --sado-dark: #075f59;
+      --sea: #0b6fa4;
+      --sky: #dff4fb;
+      --toki: #d95367;
+      --toki-pale: #fff0f2;
+      --gold: #ad7500;
+      --gold-pale: #fff7dc;
+      --green-pale: #e9f7f1;
+      --navy: #173b57;
+      --purple: #6750a4;
+      --purple-pale: #f1edff;
+      --shadow: 0 16px 42px rgba(16, 62, 57, 0.09);
+      --radius: 18px;
+      --max: 1080px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 1%, rgba(8,127,115,.11), transparent 28rem),
+        radial-gradient(circle at 97% 25%, rgba(11,111,164,.08), transparent 25rem),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.82;
+    }
+    a { color: var(--sea); text-underline-offset: 3px; }
+    img, svg { max-width: 100%; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { padding: .12em .35em; border: 1px solid #d7e1e5; border-radius: 5px; background: #f3f7f8; font-size: .9em; }
+    button { font: inherit; }
+    .progress { position: fixed; inset: 0 auto auto 0; z-index: 100; width: 0; height: 4px; background: linear-gradient(90deg,var(--sado),var(--sea),var(--toki)); }
+
+    .cover { position: relative; overflow: hidden; min-height: 500px; color: #fff; background: linear-gradient(135deg,#063f44 0%,#087f73 53%,#0b6fa4 100%); }
+    .cover::before,.cover::after { position: absolute; content: ""; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; }
+    .cover::before { width: 480px; height: 480px; right: -140px; top: -190px; }
+    .cover::after { width: 280px; height: 280px; right: 100px; bottom: -190px; }
+    .cover-inner { position: relative; z-index: 1; width: min(var(--max),calc(100% - 40px)); margin: 0 auto; padding: 70px 0 58px; }
+    .course-label { display: inline-block; margin-bottom: 26px; padding: 7px 12px; border: 1px solid rgba(255,255,255,.42); border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+    .cover h1 { max-width: 900px; margin: 0; font-size: clamp(37px,7vw,70px); line-height: 1.04; letter-spacing: -.025em; }
+    .cover h1 span { display: block; margin-bottom: .08em; color: #bff3e8; }
+    .cover-lead { max-width: 780px; margin: 25px 0 0; color: rgba(255,255,255,.92); font-size: clamp(16px,2.2vw,20px); }
+    .cover-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+    .cover-meta span { padding: 7px 11px; border-radius: 8px; background: rgba(0,0,0,.18); font-size: 13px; font-weight: 700; }
+
+    .page { width: min(var(--max),calc(100% - 40px)); margin: 34px auto 90px; }
+    .toc { display: grid; grid-template-columns: 1.1fr 2fr; gap: 26px; margin-bottom: 30px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+    .toc h2 { margin: 0; font-size: 23px; }
+    .toc p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .toc ol { columns: 2; gap: 30px; margin: 0; padding-left: 1.4em; font-size: 14px; }
+    .toc li { margin: 4px 0; break-inside: avoid; }
+    .toc a { color: var(--ink); text-decoration: none; }
+
+    section { margin: 25px 0; padding: clamp(24px,5vw,50px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); scroll-margin-top: 18px; }
+    .section-no { margin-bottom: 6px; color: var(--sado); font-size: 12px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    h2 { margin: 0 0 18px; color: var(--navy); font-size: clamp(26px,4vw,38px); line-height: 1.35; letter-spacing: -.015em; }
+    h3 { margin: 32px 0 10px; color: var(--sado-dark); font-size: 21px; line-height: 1.5; }
+    h4 { margin: 22px 0 8px; color: var(--navy); font-size: 17px; }
+    p { margin: 10px 0; }
+    ul,ol { padding-left: 1.45em; }
+    li { margin: 7px 0; }
+    .lead { color: #3a4b56; font-size: 18px; }
+    .small,.caption { color: var(--muted); font-size: 13px; }
+    .caption { margin-top: 8px; text-align: center; }
+
+    .card-grid,.goal-grid,.download-grid,.check-grid,.level-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin: 22px 0; }
+    .card { min-width: 0; padding: 19px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdfc; }
+    .card .icon { display: block; margin-bottom: 9px; font-size: 27px; }
+    .card strong { display: block; color: var(--navy); }
+    .card p { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .card.accent { border-top: 4px solid var(--sado); }
+    .card.challenge { border-top: 4px solid var(--purple); background: var(--purple-pale); }
+
+    .callout { margin: 22px 0; padding: 17px 19px; border-left: 5px solid var(--sea); border-radius: 10px; background: var(--sky); }
+    .callout.warn { border-left-color: var(--gold); background: var(--gold-pale); }
+    .callout.danger { border-left-color: var(--toki); background: var(--toki-pale); }
+    .callout.success { border-left-color: var(--sado); background: var(--green-pale); }
+
+    .flow { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 10px; align-items: center; margin: 25px 0; }
+    .flow-box { min-height: 130px; padding: 15px 12px; border: 2px solid var(--line); border-radius: 14px; background: #fff; text-align: center; }
+    .flow-box b { display: block; margin: 7px 0 5px; color: var(--navy); }
+    .flow-box span { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .flow-box .flow-icon { font-size: 28px; }
+    .flow-arrow { color: var(--sado); font-size: 25px; font-weight: 900; text-align: center; }
+    .flow-box.input { border-color: #70a9c8; background: var(--sky); }
+    .flow-box.rule { border-color: #b8a5de; background: var(--purple-pale); }
+    .flow-box.output { border-color: #70b8aa; background: var(--green-pale); }
+    .flow-box.review { border-color: #e2a2ac; background: var(--toki-pale); }
+
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; color: #fff; background: var(--sado); font-size: 11px; font-weight: 900; }
+    .badge.talk { background: var(--sea); }
+
+    .download-card { display: flex; flex-direction: column; min-height: 220px; padding: 20px; border: 2px solid var(--line); border-radius: 15px; background: #fff; }
+    .download-card .file-icon { font-size: 35px; }
+    .download-card h3 { margin: 8px 0 5px; font-size: 18px; }
+    .download-card p { flex: 1; color: var(--muted); font-size: 13px; }
+    .download-button { display: block; padding: 11px 13px; border-radius: 9px; color: #fff; background: var(--sado-dark); font-weight: 800; text-align: center; text-decoration: none; }
+    .download-card.excel { border-color: #77b7a8; background: var(--green-pale); }
+
+    .access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
+    .access-card {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 170px;
+      gap: 20px;
+      align-items: center;
+      min-width: 0;
+      padding: 22px;
+      border: 3px solid var(--sea);
+      border-radius: 17px;
+      background: var(--sky);
+    }
+    .access-card.survey { border-color: var(--toki); background: var(--toki-pale); }
+    .access-card h3 { margin: 4px 0 8px; color: var(--navy); font-size: 21px; }
+    .access-card p { margin: 6px 0; font-size: 14px; }
+    .access-card .access-purpose { color: var(--muted); }
+    .access-link {
+      display: block;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--sea);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+    .access-card.survey .access-link { background: #98374a; }
+    .access-qr {
+      display: block;
+      width: 170px;
+      height: 170px;
+      padding: 8px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(26,55,69,.12);
+    }
+    .final-access { max-width: 760px; margin: 24px auto 0; }
+    .office-guide {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 190px;
+      gap: 26px;
+      align-items: center;
+      margin: 24px 0;
+      padding: 25px;
+      border: 3px solid #2b756c;
+      border-radius: 18px;
+      background: linear-gradient(135deg,#eefaf5,#e1f4ed);
+    }
+    .office-guide h3 { margin: 4px 0 9px; font-size: 24px; }
+    .office-guide .access-qr { width: 190px; height: 190px; }
+    .office-steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; margin: 20px 0; }
+    .office-step { padding: 17px; border: 1px solid #b9d8ce; border-radius: 12px; background: #fff; }
+    .office-step b { display: block; margin-bottom: 5px; color: var(--sado-dark); }
+    .office-step p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .prompt { position: relative; margin: 18px 0; border: 1px solid #b9cad1; border-radius: 14px; overflow: hidden; background: #f8fbfc; }
+    .prompt-head { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 9px 13px; color: #fff; background: var(--navy); font-size: 13px; font-weight: 800; }
+    .copy-button { padding: 5px 10px; border: 1px solid rgba(255,255,255,.5); border-radius: 7px; color: #fff; background: rgba(255,255,255,.1); cursor: pointer; }
+    .copy-button:hover { background: rgba(255,255,255,.22); }
+    .prompt pre { margin: 0; padding: 18px; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: #22323c; font-size: 13px; line-height: 1.65; }
+
+    table { width: 100%; margin: 20px 0; border-collapse: collapse; font-size: 14px; }
+    th,td { padding: 11px 12px; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+    th { color: var(--navy); background: var(--green-pale); }
+    .table-wrap { overflow-x: auto; }
+
+    .source-stack { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 11px; margin: 24px 0; }
+    .source-layer { padding: 18px 14px; border-radius: 12px; text-align: center; }
+    .source-layer b { display: block; margin-bottom: 5px; color: var(--navy); }
+    .source-layer span { color: var(--muted); font-size: 12px; }
+    .source-layer:nth-child(1) { background: var(--sky); }
+    .source-layer:nth-child(2) { background: var(--purple-pale); }
+    .source-layer:nth-child(3) { background: var(--gold-pale); }
+    .source-layer:nth-child(4) { background: var(--green-pale); }
+
+    .excel-figure { display: grid; grid-template-columns: 1fr 1.2fr; gap: 26px; align-items: center; margin: 25px 0; padding: 22px; border: 1px solid var(--line); border-radius: 15px; background: #f9fcfb; }
+    .sheet-mini { display: grid; grid-template-columns: 42px repeat(3,1fr); border: 2px solid #98aaa5; background: #fff; font-size: 12px; }
+    .sheet-mini > div { min-height: 42px; padding: 9px 5px; border-right: 1px solid #cad5d2; border-bottom: 1px solid #cad5d2; text-align: center; }
+    .sheet-mini .head { min-height: 30px; padding: 5px; color: var(--navy); background: #e6eeee; font-weight: 800; }
+    .sheet-mini .row { color: var(--navy); background: #e6eeee; font-weight: 800; }
+    .sheet-mini .active { position: relative; background: var(--gold-pale); box-shadow: inset 0 0 0 3px var(--sado); font-weight: 900; }
+    .sheet-mini .active::after { position: absolute; right: 3px; bottom: 2px; content: "C3"; color: var(--sado-dark); font-size: 8px; }
+
+    .formula-row { display: grid; grid-template-columns: 145px minmax(0,1fr); gap: 12px; align-items: center; margin: 9px 0; padding: 12px 14px; border-radius: 10px; background: #f5f8f7; }
+    .formula-row code { display: inline-block; color: var(--navy); font-weight: 800; text-align: center; }
+    .formula-row span { color: var(--muted); font-size: 13px; }
+
+    .steps { counter-reset: step; margin: 24px 0; }
+    .step { position: relative; margin: 13px 0; padding: 17px 17px 17px 64px; border: 1px solid var(--line); border-radius: 12px; background: #fbfdfc; }
+    .step::before { position: absolute; left: 16px; top: 16px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #fff; background: var(--sado); counter-increment: step; content: counter(step); font-weight: 900; }
+    .step b { color: var(--navy); }
+
+    .work-check { display: grid; grid-template-columns: 24px minmax(0,1fr) auto; gap: 10px; align-items: start; margin: 8px 0; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: #fbfdfc; }
+    .work-check input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--sado); }
+    .work-check .estimate { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    .result-gap { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; margin: 22px 0; }
+    .result-box { padding: 18px; border: 2px solid var(--line); border-radius: 13px; text-align: center; }
+    .result-box strong { display: block; color: var(--navy); font-size: 25px; }
+    .result-box span { color: var(--muted); font-size: 12px; }
+    .result-box.raw { background: var(--gold-pale); border-color: #dfc975; }
+    .result-box.clean { background: var(--green-pale); border-color: #72b3a4; }
+    .result-arrow { color: var(--toki); font-size: 24px; font-weight: 900; }
+
+    .preview { margin: 22px 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #edf3f1; }
+    .preview img { display: block; width: 100%; border-radius: 9px; }
+
+    .answer { margin: 15px 0; border: 1px solid var(--line); border-radius: 11px; background: #fbfdfc; }
+    .answer summary { padding: 13px 16px; color: var(--navy); font-weight: 800; cursor: pointer; }
+    .answer > div { padding: 0 16px 15px; }
+
+    .footer { padding: 34px 20px 55px; color: var(--muted); font-size: 13px; text-align: center; }
+
+    @media (max-width: 800px) {
+      .toc,.excel-figure { grid-template-columns: 1fr; }
+      .card-grid,.goal-grid,.download-grid,.level-grid { grid-template-columns: 1fr 1fr; }
+      .access-grid { grid-template-columns: 1fr; }
+      .office-steps { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-box { min-height: auto; }
+      .flow-arrow { transform: rotate(90deg); }
+      .source-stack { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .page,.cover-inner { width: min(100% - 24px,var(--max)); }
+      .cover-inner { padding-top: 50px; }
+      section { border-radius: 14px; padding: 22px 17px; }
+      .toc { padding: 20px; }
+      .toc ol { columns: 1; }
+      .card-grid,.goal-grid,.download-grid,.level-grid,.source-stack { grid-template-columns: 1fr; }
+      .access-card { grid-template-columns: 1fr; }
+      .access-qr { justify-self: center; }
+      .office-guide { grid-template-columns: 1fr; padding: 20px; }
+      .office-guide .access-qr { justify-self: center; }
+      .formula-row { grid-template-columns: 1fr; }
+      .result-gap { grid-template-columns: 1fr; }
+      .result-arrow { transform: rotate(90deg); text-align: center; }
+      .work-check { grid-template-columns: 22px minmax(0,1fr); }
+      .work-check .estimate { grid-column: 2; }
+    }
+    @media print {
+      body { background: #fff; }
+      .progress,.copy-button { display: none; }
+      .cover { min-height: auto; print-color-adjust: exact; }
+      .page { width: 100%; margin: 20px 0; }
+      section,.toc { box-shadow: none; break-inside: avoid; }
+      .prompt pre { white-space: pre-wrap; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <header class="cover">
+    <div class="cover-inner">
+      <div class="course-label">令和8年度｜第2回｜2026年8月27日</div>
+      <h1><span>佐渡市IT教育事業</span>AI寺子屋</h1>
+      <p class="cover-lead">ファイルを「素材」としてAIに渡し、雑なメモから案内を作る。Excelはセル番地まで指定して、編集・数式・集計・グラフ化へ進む。</p>
+      <div class="cover-meta">
+        <span>ファイル指定</span>
+        <span>Excelセル操作</span>
+        <span>演習中心</span>
+        <span>Officeなしでも参加可</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <nav class="toc" aria-label="目次">
+      <div>
+        <h2>第2回の地図</h2>
+        <p>「チャットで相談」から一歩進み、手元の素材を仕事の成果物へ変える回です。</p>
+      </div>
+      <ol>
+        <li><a href="#access">教材・アンケートQR</a></li>
+        <li><a href="#libreoffice">LibreOfficeの準備</a></li>
+        <li><a href="#goals">今日のゴール</a></li>
+        <li><a href="#materials">素材の設計</a></li>
+        <li><a href="#downloads">演習ファイル</a></li>
+        <li><a href="#exercise-notice">案内文を作る</a></li>
+        <li><a href="#excel-basics">セル番地の基礎</a></li>
+        <li><a href="#exercise-excel">Excelを編集する</a></li>
+        <li><a href="#aggregate">集計・グラフ</a></li>
+        <li><a href="#cleaning">不整合を発見する</a></li>
+        <li><a href="#boss">統合課題</a></li>
+        <li><a href="#review">提出と振り返り</a></li>
+        <li><a href="#backlog">発展課題</a></li>
+      </ol>
+    </nav>
+
+    <section id="access">
+      <div class="section-no">01 / Access</div>
+      <h2>最初に保存｜教材URL・出席票・アンケート</h2>
+      <p class="lead">スマートフォンでQRコードを読み取るか、URLを開いてください。教材URLは授業中に何度でも戻れるよう、ブックマークしておきます。</p>
+      <div class="access-grid">
+        <div class="access-card">
+          <div>
+            <span class="badge talk">教材</span>
+            <h3>第2回の教材を開く</h3>
+            <p class="access-purpose">本文・プロンプト・演習ファイルのダウンロードをまとめています。</p>
+            <a class="access-link" href="https://ysawa.github.io/sado-ai-terakoya-2026/02/">https://ysawa.github.io/sado-ai-terakoya-2026/02/</a>
+          </div>
+          <img class="access-qr" src="020_lesson_qr.png" alt="第2回教材URLを開くQRコード">
+        </div>
+        <div class="access-card survey">
+          <div>
+            <span class="badge">必須</span>
+            <h3>出席票・アンケート</h3>
+            <p class="access-purpose">佐渡市へ提出する事業実績の確認に必要です。終了前までに送信してください。</p>
+            <a class="access-link" href="https://forms.gle/rmThH3eyxNhM5gyr9">https://forms.gle/rmThH3eyxNhM5gyr9</a>
+          </div>
+          <img class="access-qr" src="020_attendance_survey_qr.png" alt="出席票・アンケートを開くQRコード">
+        </div>
+      </div>
+      <div class="callout warn"><strong>オンライン参加の方：</strong> 教材を開く端末とQRコードを読む端末が同じ場合は、QRではなく青色のURLを押してください。</div>
+    </section>
+
+    <section id="libreoffice">
+      <div class="section-no">02 / Optional Setup</div>
+      <h2>任意準備｜LibreOfficeがあると確認・微修正しやすい</h2>
+      <p class="lead">Microsoft Officeが入っていなくても受講できます。さらに、無料のLibreOfficeを入れておくと、AIが作ったExcel・Word・PowerPoint系ファイルを手元で開き、セルや文章を確認・修正できることがあります。</p>
+      <div class="office-guide">
+        <div>
+          <span class="badge">任意</span>
+          <h3>公式サイトからダウンロード</h3>
+          <p>自分のOSとCPUに合うものを選びます。Macは<strong>Apple Silicon</strong>と<strong>Intel</strong>を間違えないようにしてください。インストールには管理者権限やパスワードが必要になる場合があります。</p>
+          <a class="access-link" href="https://www.libreoffice.org/download/download-libreoffice/">https://www.libreoffice.org/download/download-libreoffice/</a>
+        </div>
+        <img class="access-qr" src="020_libreoffice_download_qr.png" alt="LibreOffice公式ダウンロードページを開くQRコード">
+      </div>
+      <div class="office-steps">
+        <div class="office-step"><b>1｜正しい版を選ぶ</b><p>Windows、macOS、LinuxとCPUの種類を確認します。MacはApple SiliconかIntelかを選択します。</p></div>
+        <div class="office-step"><b>2｜インストールする</b><p>Windowsはダウンロードしたインストーラーを実行。MacはDMGを開き、LibreOfficeをApplicationsへ移します。</p></div>
+        <div class="office-step"><b>3｜演習ファイルを開く</b><p><code>020_practice_sales.xlsx</code>を開き、販売記録シートと黄色のセルが見えるか確認します。</p></div>
+      </div>
+      <div class="callout warn"><strong>元ファイルを残してください。</strong> Microsoft Office形式は開いて保存できますが、複雑なレイアウト・関数・グラフなどは見え方が変わる場合があります。作業用コピーで編集し、保存後に再度開いて確認します。</div>
+      <p class="small">参考：<a href="https://www.libreoffice.org/installation-instructions/">LibreOffice公式インストール手順</a> ／ <a href="https://www.libreoffice.org/system-requirements/">公式動作要件</a></p>
+    </section>
+
+    <section id="goals">
+      <div class="section-no">03 / Goal</div>
+      <h2>AIの性能より、渡す素材と確認方法が成果を決める</h2>
+      <p class="lead">今日の主役は「すごい指示文」ではありません。<strong>元になるファイル、変更する場所、完成条件</strong>を揃えることです。</p>
+      <div class="goal-grid">
+        <div class="card accent"><span class="icon">📎</span><strong>素材を分けて渡す</strong><p>事実が書かれたメモと、文体・出力条件を別ファイルにする。</p></div>
+        <div class="card accent"><span class="icon">🎯</span><strong>場所を指定する</strong><p>「Excelを直して」ではなく、シート名・セル・範囲まで伝える。</p></div>
+        <div class="card accent"><span class="icon">🔍</span><strong>人が差分を確かめる</strong><p>元データ、数式、合計値、未確定事項を最後に照合する。</p></div>
+      </div>
+      <div class="callout success"><strong>Officeが入っていなくても問題ありません。</strong> AIにファイルを加工・出力させ、利用できるプレビューや表計算環境で確認します。環境の違いという障壁を、AIと一緒に越えることも今回の趣旨です。</div>
+    </section>
+
+    <section id="materials">
+      <div class="section-no">04 / Material Design</div>
+      <h2>よい成果物は、4種類の素材からできる</h2>
+      <div class="flow" aria-label="素材から成果物を作る流れ">
+        <div class="flow-box input"><div class="flow-icon">📄</div><b>事実</b><span>日時、場所、数字、名称などの元情報</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box rule"><div class="flow-icon">📐</div><b>ルール</b><span>文字数、文体、禁止事項、出力形式</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box output"><div class="flow-icon">🧾</div><b>成果物</b><span>案内文、Excel、グラフ、HTML</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box review"><div class="flow-icon">✅</div><b>検査</b><span>元情報との一致、差分、未確定事項</span></div>
+      </div>
+      <div class="source-stack">
+        <div class="source-layer"><b>① 内容の素材</b><span>雑なメモ、議事録、CSV、過去データ</span></div>
+        <div class="source-layer"><b>② 制約の素材</b><span>社内ルール、文字数、対象者、締切</span></div>
+        <div class="source-layer"><b>③ 見本の素材</b><span>過去の案内、テンプレート、完成例</span></div>
+        <div class="source-layer"><b>④ 検査の素材</b><span>正解表、商品マスタ、チェックリスト</span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>頼み方</th><th>AIが困る点</th><th>改善</th></tr></thead>
+          <tbody>
+            <tr><td>「イベントの案内を作って」</td><td>日時も対象者も文体も分からない</td><td>元メモと作成ルールを添付する</td></tr>
+            <tr><td>「いい感じにExcelを直して」</td><td>どのシート・セル・完成条件か不明</td><td><code>販売記録!H4:H27</code>のように範囲を指定する</td></tr>
+            <tr><td>「間違いを全部直して」</td><td>何を正解とするか判断できない</td><td>商品マスタと比較し、修正前に差分一覧を出させる</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout danger"><strong>実務データを使う前に確認：</strong> 個人情報、顧客情報、契約上の秘密、未公開情報を、許可なく外部サービスへアップロードしません。今日は架空素材だけを使います。</div>
+    </section>
+
+    <section id="downloads">
+      <div class="section-no">05 / Files</div>
+      <h2>3つの演習ファイルを先に保存する</h2>
+      <p>同じフォルダに保存してください。Excelは、作業前に複製して<code>020_practice_sales_自分の名前.xlsx</code>のように名前を変えます。</p>
+      <div class="download-grid">
+        <div class="download-card"><div class="file-icon">📝</div><h3>雑なイベントメモ</h3><p>確定情報と未確定情報が混ざった、素材のテキストです。</p><a class="download-button" href="020_material_event_memo.txt" download>メモを保存</a></div>
+        <div class="download-card"><div class="file-icon">📏</div><h3>案内文の作成ルール</h3><p>文字数、禁止事項、出力形式を定めた制約ファイルです。</p><a class="download-button" href="020_material_writing_rules.txt" download>ルールを保存</a></div>
+        <div class="download-card excel"><div class="file-icon">📊</div><h3>Excel演習ブック</h3><p>販売記録・集計欄・商品マスタ・答え合わせを含む架空データです。</p><a class="download-button" href="020_practice_sales.xlsx" download>Excelを保存</a></div>
+      </div>
+      <div class="preview"><img src="020_excel_workbook_preview.jpg" alt="Excel演習ブックの販売記録シートのプレビュー" loading="lazy"></div>
+      <p class="caption">黄色の列は数式を入れる場所、水色の列は作業メモです。元ファイルは必ず残します。</p>
+    </section>
+
+    <section id="exercise-notice">
+      <div class="section-no">06 / Exercise 1–2</div>
+      <h2>雑なメモから、根拠のある案内を作る</h2>
+      <h3>演習1｜まず書かせず、事実を仕分ける（25分）</h3>
+      <div class="steps">
+        <div class="step"><b>新しいチャットを開く。</b> イベントメモと作成ルールの2ファイルを添付します。</div>
+        <div class="step"><b>ファイルの役割を明示する。</b> メモは事実の出典、ルールは出力条件だと伝えます。</div>
+        <div class="step"><b>案内文の前に確認表を作る。</b> AIが推測で穴を埋めるのを防ぎます。</div>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト1｜素材の棚卸し</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>添付した2ファイルを使います。
+
+・020_material_event_memo.txt：内容の事実を確認する元資料
+・020_material_writing_rules.txt：案内文を作るときのルール
+
+まだ案内文は書かないでください。最初に次の3表を作ってください。
+1. 確定情報：項目／内容／元メモの根拠
+2. 要確認事項：曖昧な内容／確認すべき質問／未確認のまま書く場合の扱い
+3. 不使用情報：案内に使わない方がよい内容／理由
+
+元資料にない内容は推測で追加しないでください。最後に「案内文を作る前に人が答えるべき質問」を優先順で5件以内にしてください。</pre>
+      </div>
+      <div class="check-grid">
+        <div class="card"><strong>確認1｜定員</strong><p>30人と40人が混在しているため「要確認」になったか。</p></div>
+        <div class="card"><strong>確認2｜申込URL</strong><p>存在しないURLをAIが作っていないか。</p></div>
+        <div class="card"><strong>確認3｜子ども同伴</strong><p>「できる」と断定せず、正式確認が必要になったか。</p></div>
+      </div>
+
+      <h3>演習2｜同じ事実を、3つの用途へ変換する（25分）</h3>
+      <p>人が未確定事項へ回答できない場合は、未確定部分を本文から外します。事実を増やさず、表現だけを用途に合わせます。</p>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト2｜Web・メール・SNSの3形式</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>先ほど整理した確定情報だけを使い、添付した作成ルールに従って次の3種類を作ってください。
+
+A. Web掲載文：500〜700字。見出し、概要、日時、会場、対象、内容、申込、問い合わせを含める。
+B. メール：件名を3案、その後に送信用本文を1案。冒頭で開催目的と日時を伝える。
+C. SNS：200字以内。申込リンクは［申込URL］と表記する。
+
+共通条件：
+・定員、子ども同伴、当日参加は未確定なので断定しない
+・元資料にない魅力や実績を追加しない
+・各案の後に「使用した確定情報」と「本文から外した未確定情報」を列挙する
+・最後に、3形式の違いを表で説明する</pre>
+      </div>
+      <h4>追加修正は、一度に全部言わない</h4>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト2B｜差分だけ直す</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>メール本文だけを修正してください。ほかの形式は変更しません。
+
+変更点：
+・冒頭2文を短くする
+・タイムテーブルを箇条書きにする
+・「服装自由」を持ち物の近くへ移動する
+
+修正後、変更した箇所を3点以内で報告してください。元資料にない情報は追加しないでください。</pre>
+      </div>
+      <details class="answer"><summary>時間が余った人｜HTMLの案内ページにする</summary><div><p>3形式のうちWeb掲載文を使い、1ファイルで開けるレスポンシブHTMLを作らせます。確定情報だけを使い、未確定事項は「掲載前チェック」として本文外にまとめるよう指定します。</p></div></details>
+    </section>
+
+    <section id="excel-basics">
+      <div class="section-no">07 / Excel Basics</div>
+      <h2>Excelは「どこを」「どう変えるか」を番地で伝える</h2>
+      <div class="excel-figure">
+        <div class="sheet-mini" aria-label="セル番地の説明図">
+          <div class="head"></div><div class="head">A</div><div class="head">B</div><div class="head">C</div>
+          <div class="row">1</div><div>日付</div><div>商品</div><div>数量</div>
+          <div class="row">2</div><div>8/1</div><div>番茶</div><div>2</div>
+          <div class="row">3</div><div>8/1</div><div>しおり</div><div class="active">5</div>
+        </div>
+        <div>
+          <h3>列はアルファベット、行は数字</h3>
+          <p><strong>C3</strong>は「C列と3行目が交わるセル」です。<strong>C3:C20</strong>はC3からC20までの縦の範囲です。</p>
+          <ul>
+            <li><code>販売記録!H4</code>：販売記録シートのH4</li>
+            <li><code>H4:H27</code>：H4からH27まで</li>
+            <li><code>A3:J27</code>：表全体の長方形</li>
+          </ul>
+        </div>
+      </div>
+      <div class="formula-row"><code>=F4*G4</code><span>F4の数量 × G4の単価。先頭の<code>=</code>が「これは計算式」の印です。</span></div>
+      <div class="formula-row"><code>=SUM(H4:H27)</code><span>H4からH27までを合計します。</span></div>
+      <div class="formula-row"><code>=IF(H4&gt;=3000,"大口","通常")</code><span>H4が3,000以上なら「大口」、それ以外なら「通常」と表示します。</span></div>
+      <div class="callout"><strong>AIへの依頼は作業指示書です。</strong> 対象ファイル、対象シート、対象セル、入れる値や数式、変更してはいけない場所、作業後の報告内容まで書くと確認しやすくなります。</div>
+    </section>
+
+    <section id="exercise-excel">
+      <div class="section-no">08 / Exercise 3</div>
+      <h2>Excelを1セルずつ動かし、最後に範囲へ広げる</h2>
+      <p>最初から大改造を頼みません。小さく変更し、結果を確かめてから範囲を広げます。</p>
+      <div class="level-grid">
+        <div class="card accent"><strong>Level 1｜1セル</strong><p><code>J4</code>に文字を入れ、保存できるか確認。</p></div>
+        <div class="card accent"><strong>Level 2｜数式とコピー</strong><p><code>H4</code>へ数式を入れ、<code>H27</code>まで展開。</p></div>
+        <div class="card challenge"><strong>Level 3｜複数作業</strong><p>IF式、通貨表示、行固定、変更報告まで実行。</p></div>
+      </div>
+      <h3>Level 1｜1セルだけ変更する</h3>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト3A｜疎通確認</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>添付したExcelファイルを編集してください。
+「販売記録」シートのJ4セルに「練習開始」と入力してください。
+それ以外のセルは変更しないでください。
+編集後のExcelファイルを出力し、変更したファイル名・シート名・セル番地を報告してください。</pre>
+      </div>
+      <h3>Level 2｜売上の数式を縦にコピーする</h3>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト3B｜数式と範囲</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>先ほどのExcelを続けて編集してください。
+
+1. 「販売記録」シートのH4セルに =F4*G4 を入力する
+2. H4の数式をH27までコピーする
+3. H4:H27を整数の通貨表示にする
+4. H4、H5、H27の「数式」と「計算結果」を報告する
+
+A:G列の元データ、シート名、行の順序は変更しないでください。編集後のExcelファイルを出力してください。</pre>
+      </div>
+      <h3>Level 3｜条件判定と見やすさを追加する</h3>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト3C｜IF式・書式・固定</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>同じExcelに次の変更を追加してください。
+
+1. I4に =IF(H4&gt;=3000,"大口","通常") を入力し、I27までコピーする
+2. I4:I27の「大口」を目立つ色にする
+3. 3行目までを固定し、下へスクロールしても見出しが見えるようにする
+4. 列幅は内容が読める範囲に調整する。ただし列やデータを削除しない
+
+完了後、変更範囲、使用した数式、書式変更、固定した行を箇条書きで報告してください。Excelファイルも出力してください。</pre>
+      </div>
+      <div class="work-check"><input type="checkbox"><div><strong>J4だけが変更されたことを確認した</strong><div class="small">小さな変更でファイル編集ができるか確認。</div></div><span class="estimate">3分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>H4:H27が値ではなく数式になった</strong><div class="small">H5が<code>=F5*G5</code>へ変化しているか。</div></div><span class="estimate">8分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>I列の大口・通常を3件以上目視した</strong><div class="small">境界の3,000円が大口になる条件を確認。</div></div><span class="estimate">5分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>元データとシートが残っている</strong><div class="small">ファイルを開き直して確認。</div></div><span class="estimate">4分</span></div>
+    </section>
+
+    <section id="aggregate">
+      <div class="section-no">09 / Exercise 4</div>
+      <h2>セル操作を、集計とグラフへつなげる</h2>
+      <p>「集計チャレンジ」シートの黄色セルを埋めます。まず数式だけ、その後にグラフを依頼します。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>入力先</th><th>求めるもの</th><th>数式の例</th></tr></thead>
+          <tbody>
+            <tr><td>B5</td><td>売上合計</td><td><code>=SUM('販売記録'!H4:H27)</code></td></tr>
+            <tr><td>B6</td><td>平均売上</td><td><code>=AVERAGE('販売記録'!H4:H27)</code></td></tr>
+            <tr><td>B7</td><td>最大売上</td><td><code>=MAX('販売記録'!H4:H27)</code></td></tr>
+            <tr><td>B8</td><td>伝票件数</td><td><code>=COUNT('販売記録'!H4:H27)</code></td></tr>
+            <tr><td>B12:B16</td><td>地区別売上</td><td><code>SUMIF</code>で地区ごとに集計</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト4｜集計表とグラフ</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>Excelの「集計チャレンジ」シートを編集してください。
+
+1. B5へ売上合計、B6へ平均売上、B7へ最大売上、B8へ伝票件数を求める数式を入れる
+2. A12:A16の地区名を条件にして、B12:B16へ地区別売上をSUMIFで求める
+3. A11:B16を使って地区別売上の棒グラフを作る
+4. 金額は整数の通貨表示にする
+
+集計元は「販売記録」シートの4〜27行です。集計元の値は変更しないでください。
+作業後、B5:B8とB12:B16の数式・結果、グラフの元範囲を報告し、Excelファイルを出力してください。</pre>
+      </div>
+      <div class="callout warn"><strong>ここで答えが少し変になるのが正解です。</strong> 「相川」と「相川地区」が別々に集計され、商品マスタと違う単価も含まれています。次の演習で、なぜ数字がずれたのかを追います。</div>
+    </section>
+
+    <section id="cleaning">
+      <div class="section-no">10 / Data Cleaning</div>
+      <h2>AIに直させる前に、差分一覧を作らせる</h2>
+      <p>商品マスタを正解の基準として、販売記録と比較します。元データは残し、修正案を別シートに出します。</p>
+      <div class="prompt">
+        <div class="prompt-head"><span>プロンプト5｜マスタ照合と非破壊修正</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>このExcelの「販売記録」と「商品マスタ」を照合してください。
+商品コードをキーにして、商品名と単価の不一致を調べてください。地区名の表記ゆれも探してください。
+
+重要：まだ「販売記録」の元データは変更しないでください。
+
+新しい「確認結果」シートを作り、次の列で差分を出してください。
+・伝票No
+・元シートのセル番地
+・項目
+・現在値
+・修正候補
+・根拠
+
+次に、修正候補を適用した「販売記録_修正版」シートを別に作り、売上を再計算してください。
+最後に、修正前後の売上合計と差額、検出した不整合の件数を報告し、Excelファイルを出力してください。</pre>
+      </div>
+      <div class="result-gap">
+        <div class="result-box raw"><span>修正前・入力単価のまま</span><strong>65,600円</strong><span>表記ゆれにより地区も5種類</span></div>
+        <div class="result-arrow">→ −100円 →</div>
+        <div class="result-box clean"><span>商品マスタ照合後</span><strong>65,500円</strong><span>地区は4種類に正規化</span></div>
+      </div>
+      <details class="answer"><summary>答え合わせ｜見つかる3か所</summary><div><ol><li><code>販売記録!D16</code>：「島の塩 クッキー」→ 商品マスタは「島の塩クッキー」</li><li><code>販売記録!E17</code>：「相川地区」→ 他の記録は「相川」</li><li><code>販売記録!G22</code>：850円 → 商品マスタのP005は800円</li></ol><p>「答え合わせ」シートには、マスタ単価で再計算した合計と、正規化後の地区別グラフがあります。</p></div></details>
+      <div class="callout danger"><strong>実務では「マスタが必ず正しい」とも限りません。</strong> 差分をAIに発見させ、根拠を示させ、確定するのは担当者です。AIへ修正権限を渡す前に、確認の工程を置きます。</div>
+    </section>
+
+    <section id="boss">
+      <div class="section-no">11 / Boss Exercise</div>
+      <h2>統合課題｜複数の素材から運営資料を作る</h2>
+      <p class="lead">テキスト2ファイルと、加工後のExcelを同時に使います。</p>
+      <div class="prompt">
+        <div class="prompt-head"><span>ボス課題｜運営パッケージ</span><button class="copy-button" type="button">コピー</button></div>
+        <pre>添付したイベントメモ、案内文ルール、加工後のExcelを使い、イベント運営パッケージを作ってください。
+
+成果物：
+1. 参加者向け案内メール
+2. 当日スタッフ向けチェックリスト
+3. 売上データの要約（合計・地区別上位・要確認データ）
+4. 1ファイルで開けるHTMLレポート
+
+条件：
+・イベントメモの事実と、Excelの販売実績を混同しない
+・それぞれの数字について、どのファイル・シート・セル範囲を根拠にしたか書く
+・未確定情報は断定しない
+・Excelの不整合を修正前後で説明する
+・HTMLには地区別グラフと「人が最終確認する項目」を入れる
+
+最初に作業計画と使用ファイルの役割を示し、私の確認後に成果物を作ってください。</pre>
+      </div>
+      <div class="card-grid">
+        <div class="card challenge"><strong>合格条件1</strong><p>どのファイルを何の根拠に使ったか説明できる。</p></div>
+        <div class="card challenge"><strong>合格条件2</strong><p>未確定情報や不整合を隠さず、確認事項として残す。</p></div>
+        <div class="card challenge"><strong>合格条件3</strong><p>成果物を開き、数字・表示・ファイル名まで確かめる。</p></div>
+      </div>
+    </section>
+
+    <section id="review">
+      <div class="section-no">12 / Review</div>
+      <h2>完成品より、「どこまで任せて、何を確認したか」を共有する</h2>
+      <div class="card-grid">
+        <div class="card"><span class="icon">📁</span><strong>提出物</strong><p>加工後のExcel、または作成した案内文・HTMLのいずれか1つ。</p></div>
+        <div class="card"><span class="icon">🗣️</span><strong>共有すること</strong><p>使った素材、AIへの指示、うまくいかなかった点、人が確認した点。</p></div>
+        <div class="card"><span class="icon">➡️</span><strong>次に続ける場所</strong><p>未完了の課題番号と、次にAIへ送る1文をメモする。</p></div>
+      </div>
+      <h3>終了前チェック</h3>
+      <div class="work-check"><input type="checkbox"><div><strong>元ファイルと加工後ファイルの両方が残っている</strong></div><span class="estimate">必須</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>AIが変更したセルまたは文章の差分を説明できる</strong></div><span class="estimate">必須</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>未確定事項・不整合を1つ以上見つけた</strong></div><span class="estimate">必須</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>次回再開するファイル名と課題番号をメモした</strong></div><span class="estimate">推奨</span></div>
+      <h3>最後に発表｜否定しない・自分を責めない</h3>
+      <div class="callout danger"><strong>発表は、成果の優劣を決める場ではありません。</strong> 他の人の発表を否定しません。また、「こんだけしかできていない」「自分はだめだった」と自分自身を責める言い方もしません。今日できたところを出発点にして、試した過程をそのまま共有します。</div>
+      <div class="source-stack">
+        <div class="source-layer"><b>① できたこと</b><span>完成・未完成にかかわらず、実際に進められたところ</span></div>
+        <div class="source-layer"><b>② 難しかったこと</b><span>迷った操作、AIに伝わらなかった指示、確認に困ったところ</span></div>
+        <div class="source-layer"><b>③ 気づいたこと</b><span>素材の渡し方、AIの癖、自分なりに見つけた工夫</span></div>
+        <div class="source-layer"><b>④ 全体の感想</b><span>講座全体を通して感じたこと、次に試してみたいこと</span></div>
+      </div>
+      <div class="callout success"><strong>発表例：</strong>「今日は販売記録へ数式を入れるところまでできました。セル範囲を言葉で伝えるのが難しかったです。作業を一つずつ頼むと進みやすいことに気づきました。全体を通して、手元のファイルもAIと一緒に扱えることが分かりました。」</div>
+      <div class="callout success"><strong>今日の一文：</strong> AIは素材を勝手に「正解」にしてくれる道具ではありません。素材の役割を分け、変更場所を指定し、人が差分を確かめることで、仕事に使える成果物へ近づきます。</div>
+      <h3>帰る前に｜出席票・アンケートを送信</h3>
+      <div class="access-card survey final-access">
+        <div>
+          <span class="badge">必須</span>
+          <h3>今日の出席とアンケート</h3>
+          <p class="access-purpose">回答を送信してから終了しましょう。QRコードまたはURLから開けます。</p>
+          <a class="access-link" href="https://forms.gle/rmThH3eyxNhM5gyr9">https://forms.gle/rmThH3eyxNhM5gyr9</a>
+        </div>
+        <img class="access-qr" src="020_attendance_survey_qr.png" alt="出席票・アンケートを開くQRコード">
+      </div>
+    </section>
+
+    <section id="backlog">
+      <div class="section-no">13 / More Exercises</div>
+      <h2>さらに取り組む発展課題</h2>
+      <p>自分の仕事に近いものを選び、素材・指示・確認の流れを繰り返します。</p>
+      <div class="work-check"><input type="checkbox"><div><strong>A｜案内文の事実監査</strong><div class="small">AIが作った3形式を、元メモの行ごとに照合。追加・欠落・言い換えを表にする。</div></div><span class="estimate">15分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>B｜案内HTMLを作る</strong><div class="small">スマホ対応、印刷対応、要確認一覧つき。ローカルで開いて表示を確認する。</div></div><span class="estimate">20分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>C｜Excelの新しい列を設計</strong><div class="small">消費税、税込売上、販売日区分、要確認フラグを追加。数式の意味も説明させる。</div></div><span class="estimate">20分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>D｜商品別ランキング</strong><div class="small">商品コード別に数量と売上を集計し、上位3商品をグラフ化する。</div></div><span class="estimate">15分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>E｜わざと壊して復旧</strong><div class="small">コピーしたファイルで数式を1か所消し、AIに欠損セルの検出・復元・報告をさせる。</div></div><span class="estimate">15分</span></div>
+      <div class="work-check"><input type="checkbox"><div><strong>F｜自分の素材へ置き換える</strong><div class="small">秘密情報を除いた自分のメモや表を複製し、同じ「素材→指示→検査」を試す。</div></div><span class="estimate">30分〜</span></div>
+      <div class="callout"><strong>詰まったら、作業を小さくします。</strong> 「全部やって」から「ファイルのシート名だけ教えて」「H4へ数式を1つ入れて」「変更点だけ報告して」へ戻すと、原因を切り分けられます。</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    佐渡市IT教育事業 AI寺子屋｜第2回「ファイルとExcelをAIで加工する」<br>
+    演習内の団体・イベント・販売データはすべて架空です。
+  </footer>
+
+  <script>
+    const bar = document.querySelector('.progress');
+    const updateProgress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (max > 0 ? window.scrollY / max * 100 : 0) + '%';
+    };
+    addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    document.querySelectorAll('.copy-button').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const text = button.closest('.prompt').querySelector('pre').innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = button.textContent;
+          button.textContent = 'コピーしました';
+          setTimeout(() => { button.textContent = old; }, 1400);
+        } catch (_) {
+          button.textContent = '選択してコピー';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
