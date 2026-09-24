@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <title>問い合わせ確認メモ｜第4回の動作見本</title>
+  <style>
+    * { box-sizing:border-box; }
+    body { margin:0; padding:24px 16px; background:#eef5f3; color:#20353c; font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif; line-height:1.8; }
+    main { max-width:820px; margin:auto; }
+    h1 { font-size:clamp(26px,5vw,38px); line-height:1.4; margin:8px 0 16px; }
+    h2 { font-size:22px; margin:0 0 15px; }
+    .label { color:#09665c; font-size:13px; font-weight:bold; }
+    .notice { background:#fff6da; border-left:5px solid #906500; padding:15px 18px; }
+    .panel { padding:clamp(18px,4vw,30px); margin:22px 0; background:white; border:1px solid #c8dad4; border-radius:16px; }
+    .fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    label { display:block; font-weight:bold; margin-bottom:6px; }
+    input,textarea,button { font:inherit; }
+    input,textarea { display:block; width:100%; min-width:0; padding:10px; border:1px solid #728d86; border-radius:7px; color:inherit; background:white; }
+    textarea { resize:vertical; min-height:110px; }
+    .memo { margin-top:20px; }
+    .help { color:#51656c; font-size:14px; margin:5px 0; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+    button { border:2px solid #08665c; border-radius:8px; padding:10px 22px; font-weight:bold; color:white; background:#08665c; cursor:pointer; }
+    button.secondary { color:#08665c; background:white; }
+    :focus-visible { outline:3px solid #b27500; outline-offset:4px; }
+    .status { font-weight:bold; color:#173b57; }
+    #result { scroll-margin-top:20px; border-left:5px solid #0b6fa4; }
+    #result[data-kind="missing"] { border-left-color:#a96500; }
+    #result[data-kind="review"] { border-left-color:#98405b; }
+    #result[data-kind="ok"] { border-left-color:#087f73; }
+    dl { display:grid; grid-template-columns:110px minmax(0,1fr); margin:15px 0; }
+    dt,dd { padding:10px; border-bottom:1px solid #d9e4df; margin:0; overflow-wrap:anywhere; white-space:pre-wrap; }
+    dt { background:#eff6f3; font-weight:bold; }
+    a { color:#086896; overflow-wrap:anywhere; }
+    footer { color:#51656c; font-size:13px; }
+    [hidden] { display:none !important; }
+    @media(max-width:520px) { .fields { grid-template-columns:1fr; } dl { grid-template-columns:80px minmax(0,1fr); } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="label">AI寺子屋 第4回｜架空の受付業務の動作見本</p>
+      <h1>問い合わせ確認メモ</h1>
+      <p>希望日と人数を<strong>人が入力</strong>し、入力漏れを確かめる道具です。文章の意味を読み取るAIではありません。</p>
+      <p class="notice"><strong>試作品・生成AI未接続・未送信・予約未確定</strong><br>実際の顧客情報や社内の情報は入れません。料金・空き状況・送迎の可否は判断しません。</p>
+    </header>
+    <section class="panel" aria-labelledby="input-title">
+      <h2 id="input-title">確認する内容</h2>
+      <form id="checker" novalidate autocomplete="off">
+        <div class="fields">
+          <div><label for="visit-date">希望日</label><input id="visit-date" type="date" required aria-describedby="date-help"><p class="help" id="date-help">練習例：2026年10月12日。講座の開催日ではありません。</p></div>
+          <div><label for="people">人数</label><input id="people" type="number" min="1" step="1" required inputmode="decimal" aria-describedby="people-help"><p class="help" id="people-help">1人以上の整数。13人以上は担当者への確認が必要です。</p></div>
+        </div>
+        <div class="memo"><label for="memo">相談メモ（任意）</label><textarea id="memo" aria-describedby="memo-help" placeholder="例：送迎について確認したい。"></textarea><p class="help" id="memo-help">書いた文字を結果へ写すだけです。メモの内容では判定を変えません。</p></div>
+        <div class="actions"><button type="submit">確認する</button><button type="reset" class="secondary">入力を消す</button></div>
+        <p class="help">入力を消す前に、必要な結果を作業メモに書き写してください。この道具に保存機能はありません。</p>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite">希望日と人数を入力して「確認する」を押してください。</p>
+    </section>
+    <section id="result" class="panel" tabindex="-1" hidden aria-labelledby="result-title">
+      <h2 id="result-title">確認結果</h2>
+      <ul id="messages"></ul>
+      <dl><dt>希望日</dt><dd id="result-date"></dd><dt>人数</dt><dd id="result-people"></dd><dt>相談メモ</dt><dd id="result-memo"></dd></dl>
+      <p id="next-step"></p>
+      <p class="notice"><strong>人による確認が必要です。</strong><br>入力項目がそろっていても、予約できるとは限りません。送信も予約確定も行っていません。</p>
+    </section>
+    <footer>
+      <p>データの保存・外部への送信・生成AIとの通信は行いません。開き直したときに入力を引き継ぐ機能もありません。ブラウザーが前の表示を復元する場合があるため、共用PCでは終了前に「入力を消す」を押してください。</p>
+      <p>見本の人数上限は架空の条件です。実際の運用ルールとして使わないでください。</p>
+    </footer>
+  </main>
+  <script>
+    'use strict';
+    const form = document.getElementById('checker');
+    const date = document.getElementById('visit-date');
+    const people = document.getElementById('people');
+    const memo = document.getElementById('memo');
+    const result = document.getElementById('result');
+    const status = document.getElementById('status');
+    const messages = document.getElementById('messages');
+    function clearResult(message) {
+      result.hidden = true;
+      result.removeAttribute('data-kind');
+      messages.replaceChildren();
+      ['result-date', 'result-people', 'result-memo', 'next-step'].forEach(id => {
+        document.getElementById(id).textContent = '';
+      });
+      status.textContent = message;
+    }
+    form.addEventListener('input', () => {
+      clearResult('入力が変わりました。「確認する」を押して、今の内容を確認してください。');
+    });
+    form.addEventListener('reset', () => {
+      clearResult('入力と結果を消しました。新しい内容で確認できます。');
+    });
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const issues = [];
+      if (date.validity.badInput) issues.push('希望日を選び直してください。');
+      else if (!date.value) issues.push('希望日が未入力です。');
+      else if (!date.checkValidity()) issues.push('希望日を選び直してください。');
+      if (people.validity.badInput) issues.push('人数は1以上の整数で入力してください。');
+      else if (!people.value.trim()) issues.push('人数が未入力です。');
+      else if (!people.checkValidity() || !Number.isSafeInteger(people.valueAsNumber) || people.valueAsNumber < 1) {
+        issues.push('人数は1以上の整数で入力してください。');
+      }
+      let title;
+      let next;
+      let kind;
+      if (issues.length) {
+        title = '入力内容の確認が必要';
+        next = '足りない内容や入力の誤りを人が確かめ、入れ直してから「確認する」を押してください。';
+        kind = 'missing';
+      } else if (people.valueAsNumber > 12) {
+        title = '人数上限を超過。担当者へ要確認';
+        issues.push('13人以上です。この見本では受け付けの可否を決めません。');
+        next = '人数上限を超えていることを担当者に伝えます。自己判断で予約を確定しません。';
+        kind = 'review';
+      } else {
+        title = '入力項目の確認完了';
+        issues.push('希望日と、1〜12人の人数が入力されています。');
+        next = '元の問い合わせと入力内容を人が照合します。料金・空き状況などは別に確認してください。';
+        kind = 'ok';
+      }
+      document.getElementById('result-title').textContent = title;
+      messages.replaceChildren();
+      issues.forEach(message => {
+        const item = document.createElement('li');
+        item.textContent = message;
+        messages.append(item);
+      });
+      document.getElementById('result-date').textContent = date.value || '未入力・入力途中';
+      document.getElementById('result-people').textContent = people.value ? people.value + ' 人' : '未入力・入力途中';
+      document.getElementById('result-memo').textContent = memo.value.trim() || '記入なし';
+      document.getElementById('next-step').textContent = next;
+      result.dataset.kind = kind;
+      result.hidden = false;
+      status.textContent = '確認結果：' + title;
+      result.focus();
+    });
+    window.addEventListener('pageshow', () => {
+      form.reset();
+      clearResult('希望日と人数を入力して「確認する」を押してください。');
+    });
+  </script>
+</body>
+</html>

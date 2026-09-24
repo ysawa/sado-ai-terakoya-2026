@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="佐渡市IT教育事業 AI寺子屋 第4回。自分の困りごとをもとに、AIと小さな試作品を制作。依頼文、ファイルの保存、動作確認、修正までの具体的な手順と動作見本。">
+  <title>第4回 小さな試作品の制作｜佐渡市IT教育事業 AI寺子屋</title>
+  <style>
+    :root { --ink:#172c36; --muted:#526770; --navy:#173b57; --green:#08776b; --line:#d4e2dc; --sky:#edf7fc; --mint:#eef8f1; --rose:#fff0f2; --gold:#fff7df; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:#f2f6f4; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic",Meiryo,sans-serif; line-height:1.95; }
+    a { color:#086e9b; text-underline-offset:3px; overflow-wrap:anywhere; }
+    :focus-visible { outline:3px solid #ad7500; outline-offset:4px; }
+    .cover { color:white; background:linear-gradient(125deg,#063f44,#08776b 60%,#146c97); }
+    .cover-inner { max-width:1080px; margin:auto; padding:60px 28px 48px; }
+    .eyebrow { font-size:13px; font-weight:800; letter-spacing:.12em; }
+    h1 { font-size:clamp(34px,6vw,62px); line-height:1.2; margin:24px 0; }
+    h1 span { color:#bff3e8; }
+    .cover h2 { font-size:clamp(24px,4vw,36px); color:white; }
+    .cover p { max-width:780px; }
+    .tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+    .tags span { font-size:13px; padding:4px 12px; border:1px solid #ffffff60; border-radius:8px; }
+    main { width:min(1080px,calc(100% - 32px)); margin:28px auto 64px; }
+    main section,.toc { background:white; border:1px solid var(--line); border-radius:18px; margin:24px 0; padding:clamp(22px,4.6vw,48px); box-shadow:0 12px 30px #123d3907; scroll-margin-top:18px; }
+    .section-no { font-size:12px; color:var(--green); font-weight:900; letter-spacing:.12em; }
+    h2 { color:var(--navy); font-size:clamp(25px,3.6vw,35px); line-height:1.45; margin:8px 0 22px; }
+    h3 { color:#086054; font-size:21px; line-height:1.5; margin:30px 0 12px; }
+    h4 { font-size:17px; margin:20px 0 8px; }
+    p { margin:12px 0; }
+    ul,ol { padding-left:1.5em; }
+    li { margin:9px 0; }
+    .lead { font-size:18px; }
+    .small,figcaption { color:var(--muted); font-size:13px; }
+    .toc ol { columns:2; column-gap:36px; }
+    .toc li { break-inside:avoid; }
+    .toc a { color:var(--navy); }
+    .callout { padding:17px 20px; border-left:5px solid #0b6fa4; background:var(--sky); border-radius:10px; margin:22px 0; }
+    .warn { background:var(--gold); border-left-color:#9b7000; }
+    .danger { background:var(--rose); border-left-color:#a73c57; }
+    .success { background:var(--mint); border-left-color:var(--green); }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin:22px 0; }
+    .two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .card { min-width:0; border:1px solid var(--line); padding:20px; border-radius:12px; background:#fbfdfc; overflow-wrap:anywhere; }
+    .card b { display:block; color:var(--navy); }
+    .card p { margin:8px 0 0; font-size:14px; }
+    .card h3 { margin:0 0 10px; font-size:19px; }
+    .blue { background:var(--sky); }
+    .mint { background:var(--mint); }
+    .rose { background:var(--rose); }
+    .button { display:inline-block; background:#086054; color:white; text-decoration:none; padding:10px 16px; border-radius:8px; font-weight:800; margin:8px 0; }
+    .survey { display:grid; grid-template-columns:minmax(0,1fr) 154px; gap:24px; align-items:center; background:var(--rose); border:2px solid #ba6074; border-radius:13px; padding:22px; margin:22px 0; }
+    .survey h3 { margin:0 0 10px; }
+    .survey .button { background:#943b51; }
+    .qr { width:154px; height:154px; max-width:100%; background:white; padding:4px; border-radius:6px; }
+    code,pre { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    code { font-size:.9em; background:#edf2f4; padding:.1em .3em; border-radius:4px; overflow-wrap:anywhere; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.85; }
+    .prompt { margin:22px 0; border:1px solid #b7cbd4; border-radius:12px; overflow:hidden; background:#f7fafc; }
+    .prompt-head { display:flex; justify-content:space-between; align-items:center; gap:12px; background:var(--navy); color:white; font-size:13px; font-weight:800; padding:10px 14px; }
+    .copy { flex-shrink:0; padding:6px 10px; border:1px solid #ffffff80; border-radius:6px; color:white; background:#ffffff18; cursor:pointer; font:inherit; }
+    .prompt pre { padding:18px; margin:0; }
+    figure { margin:24px 0; padding:22px; background:#f8fbfa; border:1px solid var(--line); border-radius:14px; }
+    .figure-title { color:var(--navy); font-size:14px; font-weight:800; margin:0 0 16px; }
+    figcaption { margin-top:14px; }
+    .flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:22px; padding:0; list-style:none; }
+    .flow li { position:relative; padding:15px 12px; margin:0; border:2px solid #95bfb3; border-radius:12px; text-align:center; background:white; }
+    .flow li:not(:last-child)::after { content:'→'; position:absolute; right:-20px; top:38%; line-height:1; color:var(--green); font-weight:bold; }
+    .flow b { display:block; color:var(--navy); }
+    .flow small { display:block; font-size:13px; margin-top:7px; color:var(--muted); line-height:1.7; }
+    .table-wrap { overflow-x:auto; margin:22px 0; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { border:1px solid var(--line); text-align:left; vertical-align:top; padding:12px; overflow-wrap:anywhere; }
+    th { color:var(--navy); background:var(--mint); }
+    .steps { list-style:none; counter-reset:step; padding:0; }
+    .steps > li { counter-increment:step; position:relative; padding:16px 16px 16px 56px; border:1px solid var(--line); border-radius:10px; margin:12px 0; }
+    .steps > li::before { content:counter(step); position:absolute; left:15px; top:17px; display:grid; place-items:center; background:var(--green); color:white; width:27px; height:27px; font-size:14px; font-weight:bold; border-radius:50%; }
+    .steps p { font-size:14px; margin:6px 0 0; }
+    .check { display:flex; align-items:flex-start; gap:12px; margin:12px 0; padding:13px 16px; border:1px solid var(--line); border-radius:10px; }
+    .check input { flex-shrink:0; width:18px; height:18px; margin-top:7px; accent-color:var(--green); }
+    .check span { min-width:0; }
+    .mock-field { padding:9px 12px; margin:6px 0 14px; border:1px solid #93aaa2; background:white; border-radius:6px; font-size:14px; }
+    .mock-button { display:inline-block; padding:8px 18px; color:white; background:var(--green); border-radius:7px; font-size:14px; }
+    details { margin:20px 0; padding:15px 18px; background:#f7fbf8; border:1px solid #b9d1c6; border-radius:10px; }
+    summary { font-weight:bold; color:#086054; cursor:pointer; }
+    .reference { padding:18px; background:#edf5f1; border:2px solid #abcbbf; }
+    .reference > summary { font-size:20px; }
+    .reference > section,.reference > .toc { margin:18px 0 0; }
+    .flow .current { border-color:var(--green); background:var(--mint); }
+    .jump { display:flex; flex-wrap:wrap; gap:10px 22px; }
+    footer { text-align:center; padding:0 24px 48px; font-size:13px; color:var(--muted); }
+    @media(max-width:720px) { .grid,.two,.flow,.survey { grid-template-columns:1fr; } .toc ol { columns:1; } .flow { gap:24px; } .flow li:not(:last-child)::after { content:'↓'; top:auto; right:50%; bottom:-23px; } .qr { justify-self:center; } figure { padding:15px; } th,td { padding:9px; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print { body { background:white; } .cover { background:white; color:var(--ink); } h1 span,.cover h2 { color:var(--navy); } .toc,.copy { display:none; } main>section { box-shadow:none; } figure,.prompt { break-inside:avoid; } }
+  </style>
+</head>
+<body>
+  <header class="cover"><div class="cover-inner">
+    <div class="eyebrow">令和8年度 / 第4回テキスト</div>
+    <h1><span>佐渡市IT教育事業</span><br>AI寺子屋</h1>
+    <h2>小さな試作品の制作</h2>
+    <p>今回から折り返し。第4〜6回で自分の作品を育て、第7〜8回のプレゼン大会へ。<br>最初に流れを確認したら、あとは各自の制作・相談が中心です。</p>
+    <div class="tags"><span>自分の課題が出発点</span><span>制作 → 改善 → 発表</span><span>講師による個別の助言</span></div>
+  </div></header>
+  <main>
+    <section id="access">
+      <div class="section-no">01 / はじめに</div>
+      <h2>教材と出席確認</h2>
+      <p>この教材、AIの会話画面、前回の作業メモを開いておきます。未完成でも構いません。今あるものから始めましょう。</p>
+      <div class="survey">
+        <div><h3>出席票・アンケート</h3><p>最初にリンクを確認し、<strong>講座の終了時に出席と感想を送信</strong>してください。日程は当日の講師の案内とフォームの選択肢を確認します。</p><a href="https://forms.gle/rmThH3eyxNhM5gyr9">https://forms.gle/rmThH3eyxNhM5gyr9</a></div>
+        <img class="qr" src="040_attendance_survey_qr.png" width="154" height="154" alt="出席票・アンケートのQRコード">
+      </div>
+      <p>案内や相談には、Discordの <strong>#2026-ai寺子屋</strong> を使います。<a href="https://discord.gg/g4BEJBhtC">Discordの参加リンク</a>。ファイルや画面を共有する前に、個人情報や秘密の情報が入っていないか確認します。</p>
+      <p class="small">教材のチェック状態は保存されません。必要な記録は作業メモに残します。</p>
+    </section>
+
+    <section id="goal">
+      <div class="section-no">02 / 折り返し</div>
+      <h2>プレゼン大会までの流れ</h2>
+      <p>第1〜3回では、AIを試し、自分の困りごとと解決方針を考えました。<strong>ここからは、自分のテーマで「作る・試す・直す」を重ねます。</strong></p>
+      <figure><p class="figure-title">図1｜第4回からプレゼン大会まで</p>
+        <ol class="flow"><li class="current"><b>第4回｜試作</b><small>小さな形にして<br>一度動かす</small></li><li><b>第5回｜改善</b><small>困る入力や失敗への<br>備えを追加</small></li><li><b>第6回｜仕上げ</b><small>動作・安全の確認<br>発表の準備</small></li><li><b>第7〜8回</b><small>プレゼン大会<br>作品と工夫の共有</small></li></ol>
+        <figcaption>毎回別の作品を作るのではなく、同じテーマを育てていきます。発表では、困りごと・作ったもの・試した結果・気づきを伝えます。</figcaption>
+      </figure>
+      <h3>今日の作業</h3>
+      <ol><li><strong>一つ決定：</strong>前回の方針から、今日作る小さな機能を一つ選びます。</li><li><strong>制作と確認：</strong>AIと作り、実際に入力して結果を確かめます。動くものがある方は、確認や改善から始めます。</li><li><strong>保存と次の一手：</strong>できたもの、困った点、次に試すことを残します。</li></ol>
+      <div class="callout success"><strong>講師はチューター（制作の相談役）です。</strong><br>全体への説明は導入だけに絞り、あとは各自で進めます。講師は制作の様子を見ながら、質問への回答や次の一手の助言をします。「作りたいもの・今の画面・困っていること」を見せて、気軽に相談してください。</div>
+      <p>途中で方針が変わっても、まだ動かなくても構いません。今日は<strong>一つ作るか、一つ改善すること</strong>を目指します。教材を全員で順番に読み切る必要はありません。</p>
+      <div class="callout warn"><strong>今回の試作範囲。</strong><br>架空のデータを使い、パソコン内で試します。実送信・予約・決済・公開・外部サービスへの接続はしません。個人情報や秘密の情報は入力せず、追加の契約やインストールが必要になったら講師に相談します。</div>
+      <div class="jump"><a href="#prepare">配布ファイル</a><a href="#request">制作の依頼文</a><a href="#trouble">困ったときの対処</a></div>
+    </section>
+
+    <details class="reference" id="workguide">
+      <summary>制作の手引き｜必要なところだけ参照</summary>
+      <p>ここからは、制作中に困ったときの参考資料です。全体での読み上げは行わず、自分に必要な項目だけ開いて使います。操作が分かる方は、そのまま制作を進めてください。</p>
+    <nav class="toc" aria-label="第4回の目次">
+      <h2>手引きの目次</h2>
+      <ol>
+        <li><a href="#prepare">作業の準備</a></li>
+        <li><a href="#review">前回の振り返り</a></li>
+        <li><a href="#scope">最初の機能</a></li>
+        <li><a href="#screen">画面の下書き</a></li>
+        <li><a href="#request">AIへの依頼</a></li>
+        <li><a href="#save">ファイルの保存</a></li>
+        <li><a href="#first-test">最初の動作確認</a></li>
+        <li><a href="#cases">入力を変えた確認</a></li>
+        <li><a href="#repair">不具合の修正</a></li>
+        <li><a href="#usability">使いやすさの確認</a></li>
+        <li><a href="#trouble">困ったときの対処</a></li>
+      </ol>
+    </nav>
+
+    <section id="prepare">
+      <div class="section-no">03 / 準備</div>
+      <h2>作業の準備</h2>
+      <h3>教材ファイル</h3>
+      <div class="grid">
+        <div class="card"><h3>作業メモ</h3><p>試す機能、確認結果、修正内容、保存先を残す用紙です。短い言葉で書ければ十分です。</p><a class="button" href="040_workbook_template.txt" download>作業メモの保存</a></div>
+        <div class="card"><h3>参考の依頼文</h3><p>題材が決まらないときの、問い合わせ確認メモの制作指示です。自分の題材がある方は使わなくても構いません。</p><a class="button" href="040_example_brief.txt" download>依頼文の保存</a></div>
+        <div class="card"><h3>動作見本</h3><p>実際に入力・確認できる参考例です。制作で困ったときは、この見本を使って確認の練習へ進めます。</p><a class="button" href="040_reception_sample.html" target="_blank" rel="noopener">動作見本の表示</a><a href="040_reception_sample.html" download>見本ファイルの保存</a></div>
+      </div>
+      <ol class="steps">
+        <li><strong>作業用フォルダーの作成</strong><p>デスクトップなど自分が見つけやすい場所に、新しいフォルダーを作ります。名前は <code>ai-terakoya-04</code> にします。フォルダーは、今回使うファイルをまとめる入れ物です。</p></li>
+        <li><strong>作業メモの準備</strong><p>上の「作業メモの保存」からファイルをダウンロードします。ダウンロード先を開き、作業用フォルダーへコピーします。元の配布ファイルを残し、記入用は <code>04_workbook.txt</code> という名前にします。</p></li>
+        <li><strong>前回の成果物の用意</strong><p>前回の <code>03_workbook.txt</code> を手元に用意します。発表スライドや試作指示書を作った方は、それも参考にします。前回のファイル自体は書き換えません。</p></li>
+        <li><strong>AIの会話画面の準備</strong><p>前回までに使えたAIを開きます。新しい会話なら、前回の内容は伝わっていないものとして、必要な部分だけ渡します。まずは普段の会話画面で進めて構いません。</p></li>
+      </ol>
+      <p>Windowsのフォルダー操作には「エクスプローラー」、Macでは「Finder」を使います。保存先が分からなくなったら、何度もダウンロードし直さず、一度講師と一緒に確認しましょう。</p>
+      <div class="callout warn"><strong>個人情報や秘密の情報の持ち込み禁止。</strong><br>人名・連絡先・実際の顧客資料・社内の未公開情報は使いません。自分の困りごとは、特定の人や会社が分からない一般的な場面に置き換えます。それでも秘密に当たる場合は、配布した架空の参考例を使ってください。</div>
+      <details><summary>ファイル操作型AIの利用</summary><p>前回までに設定したCLIなどを使う方は、今回の作業用フォルダーだけを開いてください。ホームフォルダーや仕事の資料フォルダー全体を読み取らせません。「読んでよいファイル」と「新しく作るファイル」を指定し、削除・上書き・追加インストールの確認は内容を読んでから判断します。分からない命令は実行しません。</p></details>
+      <label class="check"><input type="checkbox"><span>作業用フォルダーと作業メモがあり、保存先を自分で開ける。</span></label>
+    </section>
+
+    <section id="review">
+      <div class="section-no">04 / 課題の確認</div>
+      <h2>前回の振り返り</h2>
+      <p>前回のワークシートを読み、次の3つを自分の言葉で確かめます。長い説明は不要です。まずは一つずつ、1行で書きましょう。</p>
+      <div class="grid"><div class="card"><b>困っている人</b><p>例：問い合わせに返事を書く受付担当。</p></div><div class="card"><b>困っている場面</b><p>例：希望日や人数の書き忘れを、毎回探している。</p></div><div class="card"><b>楽にしたい作業</b><p>例：足りない項目を確認しやすくしたい。</p></div></div>
+      <p>「仕事を全部自動にしたい」だと、最初の作業が決まりません。「返事を書く前に、必要な情報があるか確かめたい」まで絞ると、何を作るか考えやすくなります。</p>
+      <h3>未完成からの再開</h3>
+      <p>前回のスライドがなくても参加できます。「最近、同じ確認を何度もしたこと」を一つ思い出してください。持ち物の確認、行事の準備、問い合わせへの返事などで構いません。思いつかない場合は、配布した問い合わせの例をそのまま使います。</p>
+      <div class="callout"><strong>用語メモ｜Grill me（質問による考えの掘り下げ）</strong><br>AIにすぐ答えを作らせず、質問役になってもらい、考えの曖昧な点や見落としを確かめる使い方です。「誰が困っていますか」「たとえば、どんな場面ですか」と質問を重ねます。本講座では、一問ずつ、やさしい言葉で聞いてもらいます。責めてもらうのではなく、自分の考えを具体的にするための対話です。<br><span class="small">参考：<a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md">質問で計画を点検する実装例（英語）</a>。下の依頼文だけでも、この進め方を試せます。</span></div>
+      <div class="prompt"><div class="prompt-head"><span>課題の相談｜Grill me型の対話</span><button type="button" class="copy">コピー</button></div><pre>今日は、自分の困りごとを助ける小さな試作品を作ります。
+私の困りごとは「［ここを自分の言葉に置き換える］」です。
+まず、誰がどんな場面で困っているかを整理したいです。
+一度に一つだけ質問し、私の回答を待ってください。
+私の説明に曖昧な点や見落としがあれば、やさしい言葉で具体例を聞き、確かめてください。
+私が話していない体験や数字を作らないでください。
+まだプログラムは作らず、最後に私の言葉で3行にまとめてください。</pre></div>
+      <p><strong>自分の作業：</strong>AIのまとめを読み、「自分が困っているのは本当にこれか」を確認します。違う場合は「その部分ではなく、○○に困っています」と伝えます。決めた内容を作業メモ【1】へ書きます。</p>
+    </section>
+
+    <section id="scope">
+      <div class="section-no">05 / 制作範囲</div>
+      <h2>最初の機能</h2>
+      <p>「機能」とは、道具がしてくれる一つの働きです。たとえば「入力漏れの確認」「合計の計算」「持ち物の一覧表示」です。最初は一つだけ選びます。</p>
+      <p>完成品ではなく、「このやり方で少し楽になりそうか」を試す見本を作ります。これが<strong>試作品（プロトタイプ）</strong>です。AIにプログラムを書いてもらっても、できた道具が生成AIにつながるわけではありません。今回は決めたルールで動かし、固定の結果を使う場合は「見本」と明記します。</p>
+      <figure><p class="figure-title">図2｜大きな仕組みと小さな試作品</p><div class="grid two"><div class="card rose"><b>大きすぎる案</b><p>問い合わせを読み取り、予約表を更新し、料金を計算し、お客様に返事を送る。</p></div><div class="card mint"><b>今回の案</b><p>人が希望日と人数を入力し、足りない項目を見る。送信と予約はしない。</p></div></div><figcaption>作らないものを決めると、できたかどうかを確かめやすくなります。</figcaption></figure>
+      <div class="table-wrap"><table><thead><tr><th>自分の課題の例</th><th>今回試せる小さな機能</th><th>今回は対象外</th></tr></thead><tbody>
+        <tr><td>持ち物を忘れやすい</td><td>自分で選んだ行き先に応じて、決めておいた持ち物を表示。</td><td>予定や天気の自動取得。</td></tr>
+        <tr><td>案内文の項目が抜ける</td><td>日時・場所・持ち物の入力漏れを確認。</td><td>文章の意味の自動判断やSNS投稿。</td></tr>
+        <tr><td>費用の足し算が面倒</td><td>人が入れた金額の合計を表示。</td><td>会計処理、税額の判断、請求書送信。</td></tr>
+        <tr><td>問い合わせの情報が足りない</td><td>人が入れた希望日と人数を確認。</td><td>メールの読み取り、送信、予約確定。</td></tr>
+      </tbody></table></div>
+      <p>文章の自動要約が中心の方は、最初は「文章を入れる欄」と「見本の要約を表示する欄」だけでも構いません。<strong>要約そのものの品質は、AI未接続の画面見本では確かめられない</strong>ことをメモに残します。</p>
+      <h3>完成の目印</h3>
+      <p>「いい感じに動く」ではなく、入力と結果をセットで決めます。問い合わせの例なら、<strong>「希望日だけ入れて人数を空にすると、『人数が未入力』と出る」</strong>です。自分の題材でも、この形で一つ書いてください。</p>
+      <div class="prompt"><div class="prompt-head"><span>機能の絞り込み</span><button type="button" class="copy">コピー</button></div><pre>私の課題は「［自分の課題］」です。
+今回試したい作業は「［一つの作業］」です。
+ブラウザーだけで試せる、小さな機能に絞りたいです。
+外部通信、生成AIへの接続、ログイン、データ保存、実送信は使いません。
+入力するもの・押すボタン・表示する結果・今回は作らないものを提案してください。
+自由な文章理解が必要なら、決めたルールか「見本」と明示した固定表示で代わりに試せる範囲を説明してください。
+候補は多くても二つにし、どちらにするか私の返事を待ってください。
+まだプログラムは作りません。</pre></div>
+      <label class="check"><input type="checkbox"><span>今回試す機能が一つあり、「何を入れると何が出るか」と「作らないもの」を言える。</span></label>
+    </section>
+
+    <section id="screen">
+      <div class="section-no">06 / 画面設計</div>
+      <h2>画面の下書き</h2>
+      <p>紙に四角を三つ描きます。「入力」「ボタン」「結果」と書いてください。絵の上手さは関係ありません。どこに何があると、自分が使いやすいかを考えます。</p>
+      <figure><p class="figure-title">図3｜問い合わせ確認メモの画面例</p>
+        <div class="grid two"><div class="card"><b>① 入力欄</b><p>希望日</p><div class="mock-field">2026年10月12日</div><p>人数</p><div class="mock-field">空欄</div><b>② 操作ボタン</b><p><span class="mock-button">確認する</span></p></div><div class="card mint"><b>③ 結果欄</b><p>人数が未入力です。</p><p>参加人数を人が確認し、入力してください。</p><p>未送信・予約未確定</p></div></div>
+        <figcaption>この図は画面の下書きで、ボタンは動きません。日付は練習用の架空の希望日です。実際に動かす場合は<a href="040_reception_sample.html" target="_blank" rel="noopener">動作見本</a>を開きます。</figcaption>
+      </figure>
+      <ol class="steps">
+        <li><strong>入力欄の名前</strong><p>「データ」より「希望日」「人数」のように具体的に書きます。自由な文章を一つ入れる欄にするより、日付と人数を分ける方が、最初の試作品では確認しやすくなります。</p></li>
+        <li><strong>ボタンの名前</strong><p>「実行」より「確認する」「合計する」のように、押した後の動きが分かる名前にします。ボタン名は画面の操作を伝えるため、動詞で構いません。</p></li>
+        <li><strong>結果の内容</strong><p>成功したときだけでなく、入力が足りないときの文章も決めます。「エラー」だけではなく、「人数を入力してください」と、次の行動が分かる文章にします。</p></li>
+      </ol>
+      <p><strong>自分の作業：</strong>作業メモ【1】の入力・ボタン・結果を埋めます。紙に描いた場合は、AIに渡すために短い文章へ書き直します。写真を添付するなら、机の上の資料や周囲の人が写っていないか確認します。</p>
+      <div class="callout"><strong>ここで、一度声に出して説明。</strong><br>「私はここに○○を入れます。このボタンを押すと、ここに○○が出ます。」と言えれば、制作の依頼に進めます。</div>
+    </section>
+
+    <section id="request">
+      <div class="section-no">07 / 制作の依頼</div>
+      <h2>AIへの依頼</h2>
+      <p>先に決めた内容を、AIへまとめて渡します。下の依頼文をコピーし、<strong>角括弧［ ］の部分を自分の内容へ置き換えてから</strong>送ります。空欄のままなら、AIが勝手に決めずに質問するよう、最後に指定しています。</p>
+      <h3>自分の題材用の依頼文</h3>
+      <div class="prompt"><div class="prompt-head"><span>最初の試作品の制作</span><button type="button" class="copy">コピー</button></div><pre>私の課題を助ける、小さな試作品を作ってください。
+
+使う人：［例：行事の準備をする担当者］
+困りごと：［自分が選んだ困りごと］
+今回の機能：［一つだけ］
+入力するもの：［項目名と入力例］
+押すボタン：［名前］
+表示するもの：［入力例に対して、実際に出てほしい文字］
+入力不足のとき：［不足の案内と、次の行動］
+人が確認すること：［道具だけで決めないこと］
+今回は作らないもの：［自分で決めた対象外の機能］
+
+04_my_tool_v1.html という単一のHTMLファイルにしてください。
+HTML・CSS・JavaScriptを同じファイルに入れ、ブラウザーで開けるようにします。
+外部通信、外部ライブラリ、外部の画像やフォント、ログイン、APIキーは使いません。
+送信・予約・決済・データ保存の機能は付けません。
+生成AIには接続せず、決めたルールで動かします。固定表示を使うなら「見本」と明記してください。
+画面に「試作品・生成AI未接続」と「できないこと」を表示してください。
+入力欄には見える名前を付けます。小さい画面でも文字やボタンが重ならないようにしてください。
+入力文字はプログラムとして実行せず、文字として表示してください。
+結果表示後に入力を変えたら、古い結果を消して再確認を案内してください。
+元の教材・メモは変更せず、新しいファイルとして作ります。
+保存できなければ、省略のないHTML全文を一つのコード欄に表示してください。
+最後に、作った機能・作っていない機能・確認済み・未確認を分けて説明してください。
+空欄や曖昧な条件があれば、作り始める前に一つずつ質問し、私の回答を待ってください。</pre></div>
+      <h3>参考例用の依頼文</h3>
+      <p>問い合わせの例を使う方は、<a href="040_example_brief.txt" download>参考の依頼文</a>を開き、全文をAIへ貼り付けます。添付できる場合はファイルを添付し、「このファイルの内容で試作品を作ってください」と伝えても構いません。</p>
+      <p>この参考例では、希望日と人数を人が入力します。相談メモは文字を表示するだけで、意味の判断はしません。たとえばメモに「予約を確定して」と書いても、予約の機能はありません。</p>
+      <h3>AIからの質問への回答</h3>
+      <p>「入力項目は何ですか」と聞かれたら、作業メモを見て答えます。「使う技術は？」など分からない質問には、<strong>「初心者です。単一のHTMLで、外部接続なしという条件に合う案を説明してください」</strong>と返せば構いません。理解していない選択肢を、雰囲気で選ぶ必要はありません。</p>
+      <div class="callout warn"><strong>制作中の確認。</strong><br>AIが「サーバー」「APIキー」「アカウント作成」などを求めたら、その作業は進めず、「今回は外部接続なしの画面試作にしてください」と伝えます。それでも進まないときは動作見本を使い、確認の練習へ進んでください。</div>
+    </section>
+
+    <section id="save">
+      <div class="section-no">08 / 保存と表示</div>
+      <h2>ファイルの保存</h2>
+      <p>AIの会話画面にプログラムが出ただけでは、パソコンのファイルになっていないことがあります。<strong>実際に保存先を開き、ファイルがあることを確認</strong>します。</p>
+      <figure><p class="figure-title">図4｜会話画面から自分のファイルまで</p><ol class="flow"><li><b>AIの回答</b><small>ファイルまたは<br>HTMLの文字</small></li><li><b>保存</b><small>作業用フォルダー<br>指定したファイル名</small></li><li><b>表示</b><small>ブラウザーで<br>ファイルを開く</small></li><li><b>確認</b><small>タイトル・入力欄<br>ボタン・結果</small></li></ol><figcaption>AIの「保存しました」という返事ではなく、自分で開けたことが確認の目印です。</figcaption></figure>
+      <h3>ダウンロードでの保存</h3>
+      <ol class="steps">
+        <li><strong>ダウンロード</strong><p>AIの画面にファイルがある場合は、ダウンロードします。表示やボタン名は使うAIによって違います。会話画面の中だけのプレビューは、パソコンへの保存とは別です。</p></li>
+        <li><strong>保存先と名前の確認</strong><p>ファイルを <code>ai-terakoya-04</code> フォルダーへ置きます。名前を <code>04_my_tool_v1.html</code> にします。すでに同じ名前があれば、上書きせず、今あるファイルを先に確認してください。</p></li>
+        <li><strong>ブラウザーでの表示</strong><p>ファイルを右クリックし、「プログラムから開く」「このアプリケーションで開く」などから普段のブラウザーを選びます。ダブルクリックでブラウザーが開くなら、それでも構いません。</p></li>
+      </ol>
+      <h3>コードからの保存</h3>
+      <p>HTMLは、画面を作るための文字です。<code>&lt;!doctype html&gt;</code> から始まり、最後が <code>&lt;/html&gt;</code> になるような長い文章が表示されます。<strong>途中を省略せず、最初から最後まで保存</strong>します。</p>
+      <div class="grid two"><div class="card"><h3>Windowsのメモ帳</h3><ol><li>メモ帳の新しい文書を開き、AIのHTML全文を貼り付けます。</li><li>「名前を付けて保存」で作業用フォルダーを選びます。</li><li>ファイルの種類を「すべてのファイル」、文字コードを「UTF-8」にし、名前を <code>04_my_tool_v1.html</code> にします。</li><li>保存後、末尾が <code>.html.txt</code> でないか確認します。</li></ol></div><div class="card"><h3>Macのテキストエディット</h3><ol><li>新しい文書を開き、「フォーマット」から「標準テキストにする」を選びます。</li><li>AIのHTML全文を貼り付けます。</li><li>作業用フォルダーへ <code>04_my_tool_v1.html</code> の名前で保存します。</li><li>拡張子の確認が出たら <code>.html</code> を使います。文字コードを選ぶ画面ではUTF-8にします。</li></ol></div></div>
+      <p>「拡張子」は、ファイル名の最後の <code>.html</code> や <code>.txt</code> の部分です。見えていない場合は、ファイルの情報・プロパティなどで名前を確認します。Wordなどの文書作成ソフトでは保存せず、文字だけを扱うメモ帳などを使ってください。</p>
+      <p>コード欄の外にある説明文や、コードを囲む3つの記号 <code>```</code> は入れません。「ここに続き」「省略」と書かれている場合は、次の依頼を送ります。</p>
+      <div class="prompt"><div class="prompt-head"><span>全文の再出力</span><button type="button" class="copy">コピー</button></div><pre>保存してブラウザーで開きたいので、HTMLを省略せず全文で出してください。
+最初の &lt;!doctype html&gt; から最後の &lt;/html&gt; までを、一つのコード欄にまとめてください。
+説明文はコード欄の外に置き、複数のファイルに分けないでください。
+依頼した機能や条件は変更しないでください。</pre></div>
+      <p class="small">Macの保存手順の参考：<a href="https://support.apple.com/ja-jp/guide/textedit/txted0b6cd61/mac">Apple「MacのテキストエディットでHTML書類を扱う」</a>。画面名はOSのバージョンで異なる場合があります。</p>
+      <label class="check"><input type="checkbox"><span>会話画面の中だけでなく、保存したHTMLファイルをブラウザーで開けた。</span></label>
+    </section>
+
+    <section id="first-test">
+      <div class="section-no">09 / 1回目の確認</div>
+      <h2>最初の動作確認</h2>
+      <p>最初は、うまく進むはずの入力を一つ試します。下は配布した問い合わせ見本の場合です。自分の試作品なら、同じ手順で入力例を置き換えてください。</p>
+      <ol class="steps">
+        <li><strong>使うファイルの確認</strong><p>自分で作った <code>04_my_tool_v1.html</code> を開きます。制作が止まった方は、<a href="040_reception_sample.html" target="_blank" rel="noopener">動作見本</a>を別のタブで開きます。見本の結果は、自分の試作品の確認結果とは分けて記録してください。</p></li>
+        <li><strong>期待する結果の記入</strong><p>作業メモ【2】のAへ、入力例と、出てほしい結果を先に書きます。問い合わせ見本なら「2026年10月12日、4人 → 入力項目の確認完了」です。</p></li>
+        <li><strong>入力と実行</strong><p>希望日の欄で2026年10月12日を選び、人数に <code>4</code> を入れます。相談メモは空でも構いません。「確認する」を1回押します。</p></li>
+        <li><strong>結果の読み取り</strong><p>結果の見出しだけでなく、日付・人数・注意書きも読みます。入力した内容が違っていないか、「予約確定」など作る予定のない表示が出ていないか確認します。</p></li>
+        <li><strong>実際の結果の記録</strong><p>作業メモの「実際の結果」に画面の言葉を書きます。期待どおりなら「一致」、違えば「不一致」、まだ操作できていなければ「未確認」とします。</p></li>
+      </ol>
+      <div class="callout success"><strong>参考例の正しい読み方。</strong><br>「入力項目の確認完了」は、日付と人数がそろったという意味です。空き状況や料金は確認していません。予約できる、送信された、という意味ではありません。</div>
+      <h3>画面の部品と動き</h3>
+      <p>ボタンが見えていても、押した後の動きが作られていない場合があります。画面の見た目を作るHTMLやCSSに加えて、動きを担当するJavaScriptが必要です。これらの言葉を暗記する必要はありません。<strong>「見えている」と「動く」を、自分の操作で分けて確かめる</strong>ことが大切です。</p>
+      <label class="check"><input type="checkbox"><span>自分で1回操作し、期待する結果と実際の結果を記録した。</span></label>
+    </section>
+
+    <section id="cases">
+      <div class="section-no">10 / 確認の追加</div>
+      <h2>入力を変えた確認</h2>
+      <p>一つ動いたら、条件を変えます。普段は困らなくても、入力が足りないときに変な結果が出るかもしれません。最初の目標は、次の4種類です。</p>
+      <figure><p class="figure-title">図5｜最初に試す4種類</p><ol class="flow"><li><b>普通の入力</b><small>必要な情報あり</small></li><li><b>一部が空欄</b><small>一つだけ不足</small></li><li><b>範囲外</b><small>決めた条件の外</small></li><li><b>すべて空欄</b><small>何も入れず実行</small></li></ol><figcaption>確認用の入力と、出てほしい結果をセットで用意します。この組を「テストケース」と呼ぶこともあります。</figcaption></figure>
+      <h3>問い合わせ見本の確認表</h3>
+      <p>日付は練習用の架空の希望日です。毎回、前の入力を消してから次を入れます。<strong>結果は先に予想し、実際に試した後に記録</strong>します。</p>
+      <div class="table-wrap"><table><thead><tr><th>番号</th><th>希望日</th><th>人数</th><th>期待する結果</th></tr></thead><tbody>
+        <tr><td>A｜普通</td><td>2026年10月12日</td><td>4</td><td>入力項目の確認完了。ただし未送信・予約未確定。</td></tr>
+        <tr><td>B｜不足</td><td>2026年10月12日</td><td>空欄</td><td>人数が未入力。入力するよう案内。</td></tr>
+        <tr><td>C｜範囲外</td><td>2026年10月12日</td><td>13</td><td>人数上限を超過。担当者へ要確認。</td></tr>
+        <tr><td>D｜全部空</td><td>空欄</td><td>空欄</td><td>希望日と人数の両方が未入力。</td></tr>
+      </tbody></table></div>
+      <p>見本の人数上限は12人です。この数字は練習のための架空の条件で、実際の施設のルールではありません。12人なら通常の確認、13人なら担当者への確認、という違いも確かめます。</p>
+      <h3>自分の試作品の確認表</h3>
+      <p>持ち物の道具なら「行き先を選んだ場合」と「選んでいない場合」。合計の道具なら「金額あり」「一つ空欄」「想定していない値」「全部空欄」です。空欄を0円とするのか、入力を求めるのかは、<strong>先に自分で決めてから</strong>試します。道具の出した結果に合わせて、正解を後から変えないようにします。</p>
+      <h3>変更後の表示</h3>
+      <ol><li>一度結果を表示します。</li><li>入力を一つ変えます。問い合わせ見本なら、4人を13人へ変えます。</li><li>古い結果が消えるか、再確認の案内になるかを見ます。</li><li>もう一度ボタンを押し、新しい入力に合う結果へ変わることを確かめます。</li></ol>
+      <p>入力だけ13人に変わり、結果に「4人・確認完了」が残ると、見間違いにつながります。今回の依頼文では、入力を変えたら古い結果を消すよう指定しています。</p>
+      <details><summary>追加確認｜0人・小数・境目</summary><p>問い合わせ見本では、0人・マイナス・2.5人は入力の誤りです。1以上の整数を入れる案内が出ることを確認します。12人と13人も続けて試してください。見た目が数字でも、道具が想定する数字とは限りません。</p></details>
+      <label class="check"><input type="checkbox"><span>4種類の入力を試し、未確認のものと確認済みのものを分けて記録した。</span></label>
+    </section>
+
+    <section id="repair">
+      <div class="section-no">11 / 改善</div>
+      <h2>不具合の修正</h2>
+      <p>「思ったとおりにならない部分」を、ここでは不具合と呼びます。見つかったら、自分が失敗したのではなく、直す場所が分かったと考えましょう。一度にたくさん直すと、何が原因だったか分かりにくくなります。</p>
+      <h3>修正依頼の4点</h3>
+      <figure><p class="figure-title">図6｜AIに伝える修正情報</p><div class="grid two"><div class="card"><b>① 入力</b><p>希望日：2026年10月12日<br>人数：空欄</p></div><div class="card"><b>② 操作</b><p>人数を消してから、<br>「確認する」を1回押した。</p></div><div class="card mint"><b>③ 期待</b><p>「人数が未入力」<br>という案内。</p></div><div class="card rose"><b>④ 実際</b><p>「入力項目の確認完了」<br>という表示。</p></div></div><figcaption>これは説明用の不具合例です。配布見本にこの不具合がある、という意味ではありません。自分が実際に見た結果を伝えます。</figcaption></figure>
+      <p>「動きません」だけでは、どこを直せばよいか伝わりません。使っているHTMLファイルと、上の4点を一緒に渡します。ファイルを添付できない場合は、現在のHTML全文を貼り付けます。</p>
+      <div class="prompt"><div class="prompt-head"><span>一つの不具合の修正</span><button type="button" class="copy">コピー</button></div><pre>添付した 04_my_tool_v1.html の、次の不具合だけを直してください。
+入力したもの：［実際の入力］
+操作の順番：［何をして、何を押したか］
+期待した結果：［出てほしいもの］
+実際の結果：［画面に出た文字や、変化がなかった状況］
+
+原因と直す場所を、初心者に分かる言葉で短く説明してください。
+関係のない機能や見た目は変えず、元のファイルも上書きしないでください。
+修正版は 04_my_tool_v2.html という別ファイルにしてください。
+外部通信・AI接続・データ保存を追加しないでください。
+保存できない場合は、修正後のHTML全文を省略せず出してください。
+今回の不具合の再確認と、ほかに確かめる項目を示してください。
+実際に操作していないことは「未確認」と明記してください。</pre></div>
+      <h3>修正後の再確認</h3>
+      <ol class="steps"><li><strong>別名での保存</strong><p>修正版を <code>04_my_tool_v2.html</code> として保存します。前の <code>v1</code> を残せば、比べたり戻したりできます。次の修正では <code>v3</code> と数字を増やします。</p></li><li><strong>開いているファイルの確認</strong><p><code>v2</code> をブラウザーで開きます。前のタブの <code>v1</code> を見たまま「直っていない」と判断しないよう、アドレス欄や開いたファイル名を確かめます。</p></li><li><strong>同じ操作の繰り返し</strong><p>不具合が起きたときと、同じ入力・同じ順番で試します。別の入力では、直ったかどうかの確認になりません。</p></li><li><strong>ほかの入力の再確認</strong><p>A〜Dももう一度試します。一つを直した影響で、別の入力がうまく動かなくなっていないか確認します。</p></li></ol>
+      <div class="callout"><strong>不具合が見つからない場合。</strong><br>無理に不具合を作る必要はありません。「入力例がほしい」「結果の説明が難しい」など、使い方の案内を一つ改善します。それも、変更前のファイルを残してから行います。</div>
+      <label class="check"><input type="checkbox"><span>修正した場合は、新しいファイルを開いて再確認した。未修正の点は作業メモに残した。</span></label>
+    </section>
+
+    <section id="usability">
+      <div class="section-no">12 / 使い勝手</div>
+      <h2>使いやすさの確認</h2>
+      <p>作った本人は使い方を知っています。初めて見る人が、説明なしで使えるかも確かめましょう。隣の人に頼める場合は、<strong>「ここへ入力するんだよ」と先に教えず</strong>、画面を見てもらいます。一人の場合は、少し間を空けてから声に出して読み直します。</p>
+      <div class="table-wrap"><table><thead><tr><th>見るところ</th><th>具体的な確認</th></tr></thead><tbody>
+        <tr><td>入力欄</td><td>何を入れる欄か分かるか。入力例があるか。</td></tr>
+        <tr><td>ボタン</td><td>押すと何が起きるか、名前から分かるか。</td></tr>
+        <tr><td>結果</td><td>何が分かったかと、次に何をするかが読めるか。</td></tr>
+        <tr><td>注意書き</td><td>試作品であること、できないこと、未送信であることが分かるか。</td></tr>
+        <tr><td>小さい画面</td><td>ブラウザーの横幅を狭くしても、入力欄や文字が重ならないか。</td></tr>
+        <tr><td>キーボード</td><td>Tabキーで入力欄とボタンへ進めるか。選択中の場所が分かるか。</td></tr>
+      </tbody></table></div>
+      <p><strong>依頼の例：</strong>「人数の欄の下に『1人以上の整数。13人以上は担当者へ確認』という説明を加えてください。判定のルールは変えないでください。」見た目の変更でも、保存後にもう一度入力して確認します。</p>
+      <h3>役立ち方の確認</h3>
+      <p>速さだけでなく、「必要な項目を思い出せる」「次に何を聞けばよいか分かる」という助けもあります。もし時間を比べるなら、架空の同じ作業で、道具なし・道具ありを試します。<strong>入力、結果を読む時間、手直しの時間も含めて</strong>記録してください。1回速かっただけで、毎回その時間を減らせるとは限りません。</p>
+      <label class="check"><input type="checkbox"><span>使う人が迷いそうな点を一つ確認し、役立ちそうな点と、まだ分からない点を区別した。</span></label>
+    </section>
+
+    <section id="trouble">
+      <div class="section-no">13 / 操作の補助</div>
+      <h2>困ったときの対処</h2>
+      <p>まず「何を開いて、どこまで進んだか」を確認します。分からないまま同じ操作を繰り返さず、画面の文字とファイル名を講師に見せてください。</p>
+      <div class="table-wrap"><table><thead><tr><th>困ったこと</th><th>最初の確認</th><th>次の操作</th></tr></thead><tbody>
+        <tr><td>文字やコードだけの表示</td><td>メモ帳で開いていないか。ファイル名が <code>.html.txt</code> ではないか。</td><td>本当の拡張子を確認し、HTMLファイルをブラウザーで開く。</td></tr>
+        <tr><td>白い画面</td><td>HTMLの一部だけを保存していないか。別の空ファイルを開いていないか。</td><td>ファイル名を確認し、AIに全文を出してもらう。元は残して別名で保存。</td></tr>
+        <tr><td>ボタンに反応なし</td><td>画面の下へ結果が出ていないか。動く試作品ではなく、見た目だけの下書きではないか。</td><td>入力と操作の順番を記録し、今のHTMLを添えて修正依頼。</td></tr>
+        <tr><td>直したはずの画面が古い</td><td><code>v1</code> と <code>v2</code> のどちらを開いているか。</td><td>作業フォルダーから新しい方を開く。保存済みなのに古ければ再読み込み。</td></tr>
+        <tr><td>AIの利用上限</td><td>作ったファイルや作業メモが手元にあるか。</td><td>今回の外部接続なしの試作品は、AIとの会話が止まっても操作可能。確認の練習を先に進める。</td></tr>
+        <tr><td>制作が進まない</td><td>一度にたくさんの機能を頼んでいないか。</td><td>入力・ボタン・結果の一つの流れに絞る。難しければ配布見本で確認を練習。</td></tr>
+        <tr><td>AIの回答と実際が違う</td><td>回答を読んだだけで「動いた」としていないか。</td><td>実際の操作結果を優先し、不一致として記録。AIに画面の事実を伝える。</td></tr>
+      </tbody></table></div>
+      <h3>別のAIへの引き継ぎ</h3>
+      <p>利用できる別のAIへ移る場合は、現在のHTMLと、次の短いメモを渡します。会話が自動で引き継がれるとは考えません。有料契約や上限回避のためのアカウント作成を急ぐ必要はありません。</p>
+      <div class="prompt"><div class="prompt-head"><span>作業の引き継ぎ</span><button type="button" class="copy">コピー</button></div><pre>小さな試作品の制作を続けたいです。
+目的：［自分の課題と、今回の機能］
+現在のファイル：［添付した最新のHTMLの名前］
+自分で確かめたこと：［実際の入力と結果］
+次にしたいこと：［一つだけ］
+外部通信・AI接続・保存・実送信は追加せず、元のファイルは残します。
+まず内容を読み、分からない点を一つだけ質問して、私の返事を待ってください。</pre></div>
+    </section>
+
+    </details>
+
+    <section id="finish">
+      <div class="section-no">終了前 / まとめ</div>
+      <h2>成果の共有と保存</h2>
+      <p>今日は、画面を見せながら<strong>「できたこと・困ったこと・次にすること」</strong>を短く共有します。スライドの新規作成は不要です。プレゼン大会の資料は、第6回までに整えていきます。枚数は固定しません。</p>
+      <p>ほかの人も、自分自身も責めません。未完成でも「ここまでできた」「ここで迷った」と伝えてください。</p>
+      <h3>終了前の保存確認</h3>
+      <label class="check"><input type="checkbox"><span>作業メモを保存し、最後に動作確認したHTMLの名前と保存先を記入した。</span></label>
+      <label class="check"><input type="checkbox"><span>HTMLを保存先から開き直し、操作できることを確認した。入力内容は保存されないので、必要な結果を作業メモへ写した。</span></label>
+      <label class="check"><input type="checkbox"><span>元の素材と修正前のファイルを残した。共有するファイルや画面に、個人情報・機密情報が入っていない。</span></label>
+      <label class="check"><input type="checkbox"><span>貸与・共用PCでは、保存物の持ち帰り方と片付けを講師に確認した。AIのログアウトと、試作品の入力内容の消去を行った。</span></label>
+      <h3>出席票・アンケート</h3>
+      <div class="survey"><div><p>今日の出席と感想を送信してください。<strong>開くだけでなく、回答を送信し、完了画面を確認</strong>します。日程の選択肢が分からない、開けない、送れない場合は講師へ知らせてください。</p><a class="button" href="https://forms.gle/rmThH3eyxNhM5gyr9">出席票・アンケートを開く</a></div><img class="qr" src="040_attendance_survey_qr.png" width="154" height="154" alt="終了時の出席票・アンケートのQRコード"></div>
+      <p class="small">教材のチェックを付けても、フォームの回答は送信されません。</p>
+      <p><strong>次回は同じ作品の改善です。</strong>まだできないことと、次に試すことを一つ残しておきましょう。</p>
+    </section>
+
+    <details class="reference" id="extra-guide">
+      <summary>追加の練習｜余裕がある方向け</summary>
+    <section id="advanced">
+      <div class="section-no">15 / 発展</div>
+      <h2>追加の練習</h2>
+      <p>本編が進んだ方は、一つ選んで取り組みます。どの練習でも、元のファイルを残し、変更後は普通の入力と困る入力の両方を試します。終了時には<a href="#finish">成果の共有とアンケート</a>へ戻ります。</p>
+      <div class="grid two">
+        <div class="card"><h3>A｜入力例の追加</h3><p>迷いやすい欄の下に、入力例を一つ付けます。説明を増やしすぎず、初めて見る人に伝わるか確認します。</p></div>
+        <div class="card"><h3>B｜確認項目の追加</h3><p>境目の数字、長いメモ、入力後の変更などを3種類追加します。期待する結果は、操作前に書きます。</p></div>
+        <div class="card"><h3>C｜画面の見比べ</h3><p>ボタンの位置や結果の出す場所を一つ変えた別版を作ります。どちらが使いやすいか、同じ作業で見比べます。</p></div>
+        <div class="card"><h3>D｜手作業との比較</h3><p>同じ架空の内容を、紙の確認表でも処理します。速さだけでなく、入力・確認・手直しの負担を比べます。</p></div>
+        <div class="card"><h3>E｜使い方メモの作成</h3><p>「何の道具か」「使い方」「できないこと」の3点を短くまとめ、ファイルと一緒に渡せる形にします。</p></div>
+        <div class="card"><h3>F｜別の題材での試作</h3><p>持ち物、行事の準備など、別の困りごとでも入力・ボタン・結果を一つずつ決めます。新しい道具は別ファイルにします。</p></div>
+      </div>
+      <details><summary>参考｜見本の技術資料</summary><p>プログラムの仕組みに関心がある方向けです。本編で読む必要はありません。見本では、人数の整数判定に加え、ブラウザーの入力チェックを使っています。ブラウザー内のチェックは、本番の外部サービスを守る仕組みの代わりにはなりません。</p><ul><li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number">MDN：数値の入力欄</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/checkValidity">MDN：入力内容の妥当性確認</a></li></ul></details>
+      <div class="jump"><a href="#finish">成果の共有・アンケート</a><a href="#prepare">配布ファイル</a><a href="#trouble">困ったときの対処</a></div>
+    </section>
+    </details>
+  </main>
+  <footer>佐渡市IT教育事業 AI寺子屋｜第4回「小さな試作品の制作」<br>参考例の業務・人物・日付・条件は架空です。実在の個人情報・機密情報は使用しません。<br>教材内のチェック状態は保存されません。</footer>
+  <script>
+    function revealSection(hash) {
+      if (!hash) return;
+      let id;
+      try { id = decodeURIComponent(hash.slice(1)); } catch (_) { return; }
+      const target = document.getElementById(id);
+      if (!target) return;
+      let node = target;
+      while (node) {
+        if (node.tagName === 'DETAILS') node.open = true;
+        node = node.parentElement;
+      }
+      target.scrollIntoView();
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => { revealSection(link.hash); });
+    });
+    window.addEventListener('hashchange', () => { revealSection(location.hash); });
+    revealSection(location.hash);
+    document.querySelectorAll('.copy').forEach(button => {
+      button.addEventListener('click', async () => {
+        const pre = button.closest('.prompt').querySelector('pre');
+        try {
+          await navigator.clipboard.writeText(pre.textContent);
+          button.textContent = 'コピーしました';
+        } catch (_) {
+          const range = document.createRange();
+          range.selectNodeContents(pre);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          button.textContent = '選択済み：手でコピー';
+        }
+        setTimeout(() => { button.textContent = 'コピー'; }, 2200);
+      });
+    });
+  </script>
+</body>
+</html>
