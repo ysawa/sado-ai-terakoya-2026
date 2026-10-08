@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="佐渡市IT教育事業 AI寺子屋 第5回。AIと相談しながら、説明資料、ウェブサイト、アプリケーション、ゲームを小さな形で作り切りましょう。できたら触って、説明するつもりで見返します。">
+  <title>第5回 作品を作り切ろう｜佐渡市IT教育事業 AI寺子屋</title>
+  <style>
+    :root { --ink:#172c36; --muted:#526770; --navy:#173b57; --green:#08776b; --line:#d4e2dc; --sky:#edf7fc; --mint:#eef8f1; --rose:#fff0f2; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f2f6f4; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic",Meiryo,sans-serif; line-height:1.95; }
+    a { color:#086e9b; text-underline-offset:3px; overflow-wrap:anywhere; }
+    :focus-visible { outline:3px solid #ad7500; outline-offset:4px; }
+    .cover { color:white; background:linear-gradient(125deg,#063f44,#08776b 60%,#146c97); }
+    .cover-inner { max-width:1080px; margin:auto; padding:48px 28px 38px; }
+    .eyebrow { font-size:13px; font-weight:800; letter-spacing:.12em; }
+    h1 { font-size:clamp(32px,6vw,56px); line-height:1.25; margin:22px 0; }
+    h1 span { color:#bff3e8; }
+    .cover h2 { color:white; }
+    main { width:min(1080px,calc(100% - 32px)); margin:28px auto 48px; }
+    section { background:white; border:1px solid var(--line); border-radius:18px; margin:24px 0; padding:clamp(22px,4.6vw,44px); }
+    .section-no { font-size:12px; color:var(--green); font-weight:900; letter-spacing:.12em; }
+    h2 { color:var(--navy); font-size:clamp(24px,3.6vw,32px); line-height:1.45; margin:8px 0 20px; }
+    h3 { color:#086054; font-size:19px; line-height:1.5; margin:0 0 10px; }
+    p { margin:12px 0; }
+    ul,ol { padding-left:1.5em; }
+    li { margin:9px 0; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin:22px 0; }
+    .two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .card { min-width:0; border:1px solid var(--line); padding:20px; border-radius:12px; background:#fbfdfc; overflow-wrap:anywhere; }
+    .card p { margin:8px 0 0; font-size:15px; }
+    .blue { background:var(--sky); }
+    .mint { background:var(--mint); }
+    .callout { padding:17px 20px; border-left:5px solid var(--green); background:var(--mint); border-radius:10px; margin:22px 0; }
+    .small { color:var(--muted); font-size:13px; }
+    .survey { display:grid; grid-template-columns:minmax(0,1fr) 130px; gap:22px; align-items:center; background:var(--rose); border:1px solid #ba6074; border-radius:13px; padding:22px; margin:24px 0; }
+    .qr { width:130px; height:130px; max-width:100%; background:white; padding:4px; border-radius:6px; }
+    footer { max-width:1080px; margin:auto; padding:0 28px 40px; }
+    @media(max-width:720px) { .grid,.two,.survey { grid-template-columns:1fr; } .qr { justify-self:center; } }
+    @media print { body { background:white; } .cover { background:white; color:var(--ink); } h1 span,.cover h2 { color:var(--navy); } }
+  </style>
+</head>
+<body>
+  <header class="cover"><div class="cover-inner">
+    <div class="eyebrow">令和8年度 / 第5回テキスト</div>
+    <h1><span>佐渡市IT教育事業</span><br>AI寺子屋</h1>
+    <h2>作品を作り切ろう</h2>
+    <p>今日は、AIと相談しながら、自分の作品を作り切る時間です。<br>まずは小さな形で、一つ完成させましょう。困ったら、気軽に講師へ声をかけてください。</p>
+  </div></header>
+  <main>
+    <section id="goal">
+      <div class="section-no">01 / 作品の形</div>
+      <h2>どんな作品を作る？</h2>
+      <p>自分が作りたいものに近い例を見てみましょう。前回から作っている方は、その続きを進めます。</p>
+      <div class="grid two">
+        <div class="card"><h3>説明資料（Word / Excel / PowerPoint）</h3><p>Wordで準備の手順書、Excelで予算表、PowerPointで提案資料など。文章・表・スライドで、情報を整理して伝える作品です。</p></div>
+        <div class="card blue"><h3>ウェブサイト</h3><p>地域のイベント紹介ページなど。日時、場所、参加方法を載せ、見る人が知りたい情報を探せるようにします。</p></div>
+        <div class="card mint"><h3>アプリケーション</h3><p>持ち物チェックアプリなど。準備できた物にチェックを付けると、まだ用意していない物が分かる道具です。</p></div>
+        <div class="card"><h3>ゲーム</h3><p>佐渡のクイズゲームなど。選択肢を押して答え、正解や解説を見ながら楽しく遊べる作品です。</p></div>
+      </div>
+      <p class="small">ブラウザーで使うアプリやゲームもあります。「何をするための作品か」を思い浮かべてみてください。</p>
+    </section>
+
+    <section id="start">
+      <div class="section-no">02 / 制作</div>
+      <h2>まず、一つの作品を作り切ろう</h2>
+      <ol>
+        <li><strong>前回の会話と作品を開く。</strong>途中までできているところから再開しましょう。</li>
+        <li><strong>今日作るものを、小さく決める。</strong>手順書1ページ、イベント紹介ページ、持ち物チェック、クイズ3問など、作り切れそうな大きさにします。</li>
+        <li><strong>AIと相談しながら続きを作る。</strong>「このページに参加方法を足したい」「チェックした物を一覧から消したい」など、したいことを具体的に伝えます。</li>
+        <li><strong>できた作品を保存する。</strong>次回、自分で開ける場所に残しておきましょう。保存の仕方が分からなければ、講師と一緒に進めます。</li>
+      </ol>
+      <div class="callout">講師は制作の相談役です。迷ったら、今の作品を見せながら「こうしたい」「ここで止まっている」と相談してください。</div>
+      <p>資料は使っている文書・表計算・スライドソフトで、サイトやブラウザーで動く作品はブラウザーで開きます。開き方が分からなければ、AIとの会話を講師に見せましょう。</p>
+      <p>作るものが増えて迷ったら、まず今作っている部分を最後まで仕上げましょう。<strong>第6回は、できた作品を紹介する発表資料を作ります。</strong></p>
+      <p class="small">制作には架空の情報を使い、個人情報や秘密の情報をAIに渡さないようにします。</p>
+    </section>
+
+    <section id="touch">
+      <div class="section-no">03 / できたら</div>
+      <h2>作品ができたら、触ってみよう</h2>
+      <p>時間に余裕があれば、いろんな角度で使ってみましょう。「自分の作品はこんなふうに使えるんだ」と感じてみてください。</p>
+      <div class="grid">
+        <div class="card mint"><h3>使う人になってみる</h3><p>手順書を読み、予算表の数字を入れ、サイトで情報を探し、アプリを操作し、ゲームを遊んでみます。</p></div>
+        <div class="card blue"><h3>初めて見るつもりで</h3><p>「どこから読もう？」「次は何を押そう？」「この言葉は伝わるかな？」と眺めてみます。</p></div>
+        <div class="card"><h3>誰かに見せてみる</h3><p>できている部分を隣の人や講師に見せてみましょう。「ここはどう使うの？」という一言も、制作のヒントになります。</p></div>
+      </div>
+    </section>
+
+    <section id="explain">
+      <div class="section-no">04 / 余裕があれば</div>
+      <h2>自分の言葉で説明できる？</h2>
+      <p>作品ができた方は、AIが作った資料や画面を見返してみましょう。<strong>口に出すか、頭の中で、誰かに説明するつもりで話してみます。</strong></p>
+      <ul>
+        <li>これは、誰のために、何をする作品？</li>
+        <li>このページ・表・画面には、何が書いてある？</li>
+        <li>ここを操作すると、どうなる？</li>
+      </ul>
+      <p>Excelなら数字や計算、PowerPointなら図の意味、サイトなら案内、アプリならボタン、ゲームならルール。見て分かったつもりでも、意外と説明しにくい部分があります。</p>
+      <p>詰まったところは、AIに「この部分をやさしく説明して」と聞いたり、実際に触ったりしてみましょう。そのあと、自分の言葉でもう一度話してみます。</p>
+    </section>
+  </main>
+  <footer>
+    <div class="survey"><div><h3>出席票・アンケート</h3><p>終了時に、今日の出席と感想を送信してください。日程は当日の案内に合わせて選びます。</p><a href="https://forms.gle/rmThH3eyxNhM5gyr9">出席票・アンケートを開く</a></div><img class="qr" src="050_attendance_survey_qr.png" width="130" height="130" alt="出席票・アンケートのQRコード"></div>
+    <p class="small">相談・共有：Discord <strong>#2026-ai寺子屋</strong> ｜ <a href="https://discord.gg/g4BEJBhtC">参加リンク</a></p>
+    <p class="small">佐渡市IT教育事業 AI寺子屋｜第5回「作品を作り切ろう」</p>
+  </footer>
+</body>
+</html>
