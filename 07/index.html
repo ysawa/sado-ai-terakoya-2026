@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="佐渡市IT教育事業 AI寺子屋 第7回。2026年11月5日（木）の作品発表会の時間割と、終了時の出席票・アンケート。">
+  <title>第7回 作品発表会（1日目）｜佐渡市IT教育事業 AI寺子屋</title>
+  <style>
+    :root { --ink:#172c36; --navy:#173b57; --green:#08695f; --line:#d4e2dc; --mint:#eef8f1; --rose:#fff0f2; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f2f6f4; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic",Meiryo,sans-serif; line-height:1.8; }
+    a { color:var(--green); text-underline-offset:3px; }
+    :focus-visible { outline:3px solid #ad7500; outline-offset:4px; }
+    header { color:white; background:linear-gradient(125deg,#063f44,#08776b 60%,#146c97); }
+    .cover { max-width:920px; margin:auto; padding:36px 24px; }
+    .eyebrow { margin:0; font-size:14px; font-weight:700; }
+    h1 { font-size:clamp(28px,6vw,46px); line-height:1.3; margin:12px 0; }
+    .date { margin:0; font-size:clamp(16px,3vw,21px); font-weight:700; }
+    main { width:min(920px,calc(100% - 28px)); margin:24px auto 40px; }
+    section { background:white; border:1px solid var(--line); border-radius:16px; padding:clamp(16px,4vw,34px); margin:0 0 20px; }
+    h2 { margin:0 0 10px; color:var(--navy); font-size:clamp(22px,4vw,30px); line-height:1.4; }
+    p { margin:8px 0 12px; }
+    table { width:100%; border-collapse:collapse; margin:16px 0; }
+    th,td { border-bottom:1px solid var(--line); padding:8px 12px; text-align:left; }
+    thead th { color:var(--navy); background:var(--mint); }
+    tbody th { white-space:nowrap; font-variant-numeric:tabular-nums; font-weight:600; }
+    .break { background:var(--mint); }
+    .survey { display:grid; grid-template-columns:minmax(0,1fr) 144px; gap:20px; align-items:center; background:var(--rose); }
+    .qr { width:144px; height:auto; max-width:100%; background:white; padding:4px; border-radius:6px; }
+    .button { display:inline-block; color:white; background:var(--green); border-radius:8px; padding:9px 14px; text-decoration:none; font-weight:700; }
+    @media(max-width:520px) { .survey { grid-template-columns:1fr; } th,td { padding:7px 8px; } }
+    @media print { header,body,section { color:var(--ink); background:white; } main { width:100%; } .survey { break-inside:avoid; } .button { color:var(--green); background:white; padding:0; } }
+  </style>
+</head>
+<body>
+  <header><div class="cover">
+    <p class="eyebrow">佐渡市IT教育事業 AI寺子屋 ／ 第7回テキスト</p>
+    <h1>作品発表会（1日目）</h1>
+    <p class="date">2026年11月5日（木） 18:00〜20:30</p>
+  </div></header>
+  <main>
+    <section id="schedule">
+      <h2>本日の時間割</h2>
+      <p>1枠13分（発表10分＋質問・交代3分）です。発表番号は<a href="https://docs.google.com/spreadsheets/d/1EdhZAhxWNuUuOI6gOuj5NaA1fCsVNns88e49oPxAomo/edit?gid=0#gid=0">発表日程のスプレッドシート</a>でご確認ください。</p>
+      <table aria-label="11月5日の発表時間割">
+        <thead><tr><th scope="col">時間</th><th scope="col">内容</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">18:00〜18:05</th><td>開始の挨拶（5分）</td></tr>
+          <tr><th scope="row">18:05〜18:18</th><td>発表1</td></tr>
+          <tr><th scope="row">18:18〜18:31</th><td>発表2</td></tr>
+          <tr><th scope="row">18:31〜18:44</th><td>発表3</td></tr>
+          <tr><th scope="row">18:44〜18:57</th><td>発表4</td></tr>
+          <tr><th scope="row">18:57〜19:10</th><td>発表5</td></tr>
+          <tr class="break"><th scope="row">19:10〜19:20</th><td><strong>休憩（10分）</strong></td></tr>
+          <tr><th scope="row">19:20〜19:33</th><td>発表6</td></tr>
+          <tr><th scope="row">19:33〜19:46</th><td>発表7</td></tr>
+          <tr><th scope="row">19:46〜19:59</th><td>発表8</td></tr>
+          <tr><th scope="row">19:59〜20:12</th><td>発表9</td></tr>
+          <tr><th scope="row">20:12〜20:25</th><td>発表10</td></tr>
+          <tr><th scope="row">20:25〜20:30</th><td>終了の挨拶（5分）</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="survey" class="survey">
+      <div>
+        <h2>出席票・アンケート</h2>
+        <p>発表会の終了時に、出席と感想を送信してください。</p>
+        <a class="button" href="https://forms.gle/rmThH3eyxNhM5gyr9">出席票・アンケートを開く</a>
+      </div>
+      <img class="qr" src="070_attendance_survey_qr.png" width="144" height="144" alt="出席票・アンケートのQRコード">
+    </section>
+  </main>
+</body>
+</html>
