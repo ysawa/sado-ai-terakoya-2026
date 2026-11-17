@@ -20,6 +20,8 @@
 - 発表枠の登録先: https://docs.google.com/spreadsheets/d/1EdhZAhxWNuUuOI6gOuj5NaA1fCsVNns88e49oPxAomo/edit?gid=0#gid=0
 - 第7回: https://ysawa.github.io/sado-ai-terakoya-2026/07/
 - 第7回の内容: 作品発表会（1日目、2026年11月5日（木）18:00〜20:30）。発表1〜10の時間割と出席票・アンケート。
+- 第8回（最終回）: https://ysawa.github.io/sado-ai-terakoya-2026/08/
+- 第8回の内容: 作品発表会（2日目、2026年11月19日（木）18:00〜20:30）。当日の時間割と出席票・アンケート。
 
 教材の見出しは、名詞・名詞句による体言止めを基本とします。詳細は `AGENTS.md` を参照してください。
 
